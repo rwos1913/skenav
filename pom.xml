@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>software.skenav</groupId>
+    <artifactId>Market</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <main.class>anon.skenav.SkenavApplication</main.class>
+        <java.version>1.8</java.version>
+        <maven.version>3.8.1</maven.version>
+        <dropwizard.version>2.0.21</dropwizard.version>
+        <metrics.version>4.1.21</metrics.version>
+        <shade.version>3.2.4</shade.version>
+        <mavenJar.version>3.0.0</mavenJar.version>
+        <exec.version>1.6.0</exec.version>
+        <json.version>20210307</json.version>
+        <encoder.version>1.2.3</encoder.version>
+        <mongodb.version>4.2.3</mongodb.version>
+        <bouncycastle.version>1.68</bouncycastle.version>
+        <cage.version>1.0</cage.version>
+        <guava.version>30.1.1-jre</guava.version>
+        <surefire.version>3.0.0-M5</surefire.version>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core -->
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-core</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-assets -->
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-core -->
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-views-mustache -->
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-views-mustache</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-forms -->
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-forms</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/org.json/json -->
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>${encoder.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>${mongodb.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/com.github.cage/cage -->
+            <groupId>com.github.cage</groupId>
+            <artifactId>cage</artifactId>
+            <version>${cage.version}</version>
+        </dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${mavenJar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>./usercontent/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${shade.version}</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <!-- <minimizeJar>true</minimizeJar> -->
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.version}</version>
+                <configuration>
+                    <executable>java</executable>
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>${project.build.directory}\${project.artifactId}-${project.version}.jar</argument>
+                        <argument>server</argument>
+                        <argument>config.yaml</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
