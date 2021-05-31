@@ -22,8 +22,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     }
 
     @Override
-    public void run(SkenavConfiguration configuration,
-                    Environment environment) {
+    public void run(SkenavConfiguration configuration, Environment environment) {
         environment.jersey().register(MultiPartFeature.class);
         environment.jersey().register(SkenavResources.class);
     }

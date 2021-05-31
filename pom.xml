@@ -14,20 +14,13 @@
         <dropwizard.version>2.0.21</dropwizard.version>
         <metrics.version>4.1.21</metrics.version>
         <shade.version>3.2.4</shade.version>
-        <mavenJar.version>3.0.0</mavenJar.version>
+        <mavenJar.version>3.2.0</mavenJar.version>
         <exec.version>1.6.0</exec.version>
-        <json.version>20210307</json.version>
-        <encoder.version>1.2.3</encoder.version>
-        <mongodb.version>4.2.3</mongodb.version>
-        <bouncycastle.version>1.68</bouncycastle.version>
-        <cage.version>1.0</cage.version>
-        <guava.version>30.1.1-jre</guava.version>
         <surefire.version>3.0.0-M5</surefire.version>
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
-        <dependency>
+        <dependency>    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${surefire.version}</version>
@@ -57,46 +50,6 @@
             <artifactId>dropwizard-forms</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/org.json/json -->
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${json.version}</version>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/org.owasp.encoder/encoder -->
-            <groupId>org.owasp.encoder</groupId>
-            <artifactId>encoder</artifactId>
-            <version>${encoder.version}</version>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver-sync</artifactId>
-            <version>${mongodb.version}</version>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/com.github.cage/cage -->
-            <groupId>com.github.cage</groupId>
-            <artifactId>cage</artifactId>
-            <version>${cage.version}</version>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>3.0.2</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -124,11 +77,8 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addClasspath>true</addClasspath>
+                            <addClasspath>false</addClasspath>
                         </manifest>
-                        <manifestEntries>
-                            <Class-Path>./usercontent/</Class-Path>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
