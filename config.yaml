@@ -1,2 +1,1 @@
-template: Hello, %s!
-defaultName: Stranger
+uploadDirectory: /Users/currycarr/IdeaProjects/skenav/target/   # expects trailing slash

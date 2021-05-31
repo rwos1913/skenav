@@ -1,36 +1,46 @@
 package skenav.code;
 
+import com.google.common.collect.ImmutableMap;
 import io.dropwizard.Application;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import skenav.code.health.SkenavHealthCheck;
-import skenav.code.resources.SkenavResources;
+import io.dropwizard.views.ViewBundle;
+import skenav.code.resources.UploadResources;
+import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+
+import java.io.File;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
     }
 
-    @Override
-    public String getName() {
-        return "hello-world";
+    private void environment_setup(SkenavConfiguration config, Environment environment) {
+        File uploadDirectory = new File(config.getUploadDirectory() + "usercontent/");
+        if (!uploadDirectory.exists()) {
+            final boolean mkdirs = uploadDirectory.mkdirs();
+            System.out.println("----" + mkdirs);
+        }
     }
-    
+
     @Override
     public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
+       bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
+            .put("/www","/static")
+            .build()));
 
+        bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
-    public void run(SkenavConfiguration configuration,
-                    Environment environment) {
-        final SkenavResources resource = new SkenavResources(
-                configuration.getTemplate(),
-                configuration.getDefaultName()
-        );
-        final SkenavHealthCheck healthCheck =
-                new SkenavHealthCheck(configuration.getTemplate());
-        environment.healthChecks().register("template", healthCheck);
-        environment.jersey().register(resource);
+    public void run(SkenavConfiguration configuration, Environment environment) {
+        environment_setup(configuration,environment);
+        final UploadResources resources = new UploadResources(configuration.getUploadDirectory());
+
+        environment.jersey().register(MultiPartBundle.class);
+        environment.jersey().register(resources);
+
     }
 }
