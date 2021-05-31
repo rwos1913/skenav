@@ -1,33 +1,43 @@
 package skenav.code.resources;
-
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import skenav.code.views.UploadView;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 
 
-@Path("/upload")
-@Produces(MediaType.APPLICATION_JSON)
-public class SkenavResources {
+@Path("/")
+@Produces(MediaType.TEXT_HTML)
+public class UploadResources {
+    private String uploadDirectory;
+
+    public UploadResources(String uploadDirectory) {
+        this.uploadDirectory = uploadDirectory;
+    }
+
     @POST
+    @Path("upload")
+    //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(
             @FormDataParam("file") final InputStream fileInputStream,
             @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
 
-        String uploadedFileLocation = "/Users/currycarr/upload_place" + contentDispositionHeader.getFileName();
+        String uploadedFileLocation = uploadDirectory + "usercontent/" + contentDispositionHeader.getFileName();
 
         writeToFile(fileInputStream, uploadedFileLocation);
         String output = "File uploaded to : " + uploadedFileLocation;
         System.out.println(output);
         return Response.ok(output).build();
 
+    }
+
+    @GET
+    public UploadView UploadView(String uploadDirectory) {
+        return new UploadView(uploadDirectory);
     }
 
     private void writeToFile(InputStream fileInputStream, String uploadedFileLocation) throws IOException {

@@ -17,6 +17,7 @@
         <mavenJar.version>3.2.0</mavenJar.version>
         <exec.version>1.6.0</exec.version>
         <surefire.version>3.0.0-M5</surefire.version>
+        <assetBundle.version>1.0.5</assetBundle.version>
     </properties>
 
     <dependencies>
@@ -50,6 +51,11 @@
             <artifactId>dropwizard-forms</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard-bundles</groupId>
+            <artifactId>dropwizard-configurable-assets-bundle</artifactId>
+            <version>${assetBundle.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -77,8 +83,11 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addClasspath>false</addClasspath>
+                            <addClasspath>true</addClasspath>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>./usercontent/</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

@@ -1,3 +1,1 @@
-template: Hello, %s!
-defaultName: Stranger
-uploadDirectory: R:\Temp\  # expects trailing slash
+uploadDirectory: /Users/currycarr/IdeaProjects/skenav/target/   # expects trailing slash
