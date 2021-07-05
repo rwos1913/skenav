@@ -1,0 +1,94 @@
+#filemgrlogocontainer {
+    height: 100px;
+    width: 350px;
+    margin: auto;
+}
+#filemgrlogo{
+    height: 100%;
+    margin: auto;
+    display: block;
+}
+.button {
+    width: 45%;
+    height: 30px;
+    border-radius: 5px;
+}
+#filemgrbutton {
+    float: left;
+}
+#mediasuitebutton {
+    float: right;
+}
+.button:hover {
+    background: #D1D1D1;
+}
+.buttontext {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 4px;
+}
+#pageselectbuttoncontainer {
+    width: 500px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+
+}
+#superbox {
+    border-style: solid;
+    border-radius: 10px;
+    margin-right: 3%;
+    margin-left: 3%;
+    margin-top: 20px;
+    height: 90%
+}
+#upperbar {
+    margin-right: fill;
+    margin-left: fill;
+    position: relative;
+    overflow: hidden;
+    border-bottom: solid;
+    height: 30px;
+}
+.fmboxbutton{
+    height: 100%;
+}
+.fmboxbutton:hover {
+    background: #D1D1D1;
+}
+.fmbuttontext {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 5px;
+}
+#uploadbutton {
+    display: inline-block;
+    border-right-style: solid;
+    width: 200px;
+    float: left;
+}
+#uploadbutton:hover {
+    border-radius: 10px 0px 0px 0px;
+}
+#searchbox {
+    display: block;
+    float: none;
+    margin-right: 200px;
+    margin-left: 200px;
+}
+#filterbutton {
+    display: inline-block;
+    float: right;
+    border-left-style: solid;
+    width: 200px;
+}
+#filterbutton:hover {
+    border-radius: 0px 10px 0px 0px;
+}
+.hidden {
+    opacity: 0;
+    z-index: -1;
+}
+div{
+
+}

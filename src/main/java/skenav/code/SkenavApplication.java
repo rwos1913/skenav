@@ -6,6 +6,8 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import skenav.code.resources.FileMgrResources;
+import skenav.code.resources.HomeResources;
 import skenav.code.resources.UploadResources;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 
@@ -37,10 +39,15 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     @Override
     public void run(SkenavConfiguration configuration, Environment environment) {
         environment_setup(configuration,environment);
-        final UploadResources resources = new UploadResources(configuration.getUploadDirectory());
+        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory());
+        final HomeResources homeResources = new HomeResources();
+        final FileMgrResources fileMgrResources = new FileMgrResources();
 
         environment.jersey().register(MultiPartBundle.class);
-        environment.jersey().register(resources);
+        environment.jersey().register(uploadResources);
+        environment.jersey().register(homeResources);
+        environment.jersey().register(fileMgrResources);
+
 
     }
 }
