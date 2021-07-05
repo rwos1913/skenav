@@ -8,8 +8,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 
-
-@Path("/")
+@Path("upload")
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
     private String uploadDirectory;
@@ -18,8 +17,9 @@ public class UploadResources {
         this.uploadDirectory = uploadDirectory;
     }
 
+
     @POST
-    @Path("upload")
+    //@Path("upload")
     //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(
