@@ -20,9 +20,15 @@
         <assetBundle.version>1.0.5</assetBundle.version>
         <jupiter.version>5.8.0-M1</jupiter.version>
         <junit.platform.version>1.8.0-M1</junit.platform.version>
+        <derby.version>10.15.2.0</derby.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-runner</artifactId>
@@ -34,11 +40,6 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${jupiter.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>    <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${surefire.version}</version>
         </dependency>
         <dependency>    <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core -->
             <groupId>io.dropwizard</groupId>
