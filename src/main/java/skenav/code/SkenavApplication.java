@@ -6,6 +6,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import skenav.code.db.Database;
 import skenav.code.resources.FileMgrResources;
 import skenav.code.resources.HomeResources;
 import skenav.code.resources.UploadResources;
@@ -16,6 +17,10 @@ import java.io.File;
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
+        // call to database test method definitely clean up when it becomes needed
+        Database database = Database.getInstance();
+        String test = "test database file name";
+        database.addFile(test);
     }
 
     private void environment_setup(SkenavConfiguration config, Environment environment) {
@@ -35,6 +40,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
         bootstrap.addBundle(new MultiPartBundle());
     }
+
 
     @Override
     public void run(SkenavConfiguration configuration, Environment environment) {

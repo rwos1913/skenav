@@ -7,6 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import skenav.code.db.Database;
 
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)
