@@ -21,9 +21,15 @@
         <jupiter.version>5.8.0-M1</jupiter.version>
         <junit.platform.version>1.8.0-M1</junit.platform.version>
         <h2.version>1.4.200</h2.version>
+        <commonsIO.version>2.11.0</commonsIO.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commonsIO.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
