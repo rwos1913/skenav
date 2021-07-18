@@ -47,7 +47,8 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         Database database = new Database();
 
         final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory());
-        final HomeResources homeResources = new HomeResources(database);
+        final HomeResources homeResources = new HomeResources();
+        //final HomeResources homeResources = new HomeResources(database);
         final FileMgrResources fileMgrResources = new FileMgrResources();
 
         String test = "test file name";
