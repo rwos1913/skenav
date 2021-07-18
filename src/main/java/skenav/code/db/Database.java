@@ -1,19 +1,14 @@
 package skenav.code.db;
-
-import skenav.code.SkenavApplication;
-import skenav.code.SkenavConfiguration;
-
-import java.io.File;
 import java.sql.*;
 
 public class Database {
     Connection con;
 
     public Database() {
-        dbConnect();
+        connect();
     }
 
-    public void dbConnect() {
+    private void connect() {
         try{
             Class.forName("org.h2.Driver");
             con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
@@ -23,14 +18,21 @@ public class Database {
         };
     }
 
+    private void disconnect() {
+        try {
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public static void createTable() {
         try {
             Class.forName("org.h2.Driver");
             Connection con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
-            Statement stmt1 = con.createStatement();
-            stmt1.executeUpdate("CREATE TABLE table1 (file_id INT GENERATED ALWAYS AS IDENTITY , file_name varchar(255))");
-            stmt1.close();
-            con.close();
+            Statement statement = con.createStatement();
+            statement.executeUpdate("CREATE TABLE table1 (file_id INT GENERATED ALWAYS AS IDENTITY , file_name varchar(255))");
+            statement.close();
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -39,13 +41,12 @@ public class Database {
 
     public void addFile(String filename) {
         try {
-            PreparedStatement stmt2 = con.prepareStatement("INSERT INTO table1 (file_name)" + "VALUES (?)");
-            stmt2.setString(1, filename);
-            stmt2.executeUpdate();
+            PreparedStatement statement = con.prepareStatement("INSERT INTO table1 (file_name) VALUES (?)");
+            statement.setString(1, filename);
+            statement.executeUpdate();
             //stmt.executeUpdate("INSERT INTO table1 (file_name) VALUES ('hello')");
             // add parameterized query
-            stmt2.close();
-            con.close();
+            statement.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

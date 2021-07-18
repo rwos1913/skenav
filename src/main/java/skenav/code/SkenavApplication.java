@@ -11,13 +11,7 @@ import skenav.code.resources.FileMgrResources;
 import skenav.code.resources.HomeResources;
 import skenav.code.resources.UploadResources;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
-import org.apache.commons.io.FileUtils;
-import sun.nio.cs.UTF_8;
-
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
