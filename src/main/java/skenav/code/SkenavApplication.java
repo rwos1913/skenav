@@ -21,12 +21,12 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 
     private void environment_setup(SkenavConfiguration config, Environment environment) {
         File uploadDirectory = new File(config.getUploadDirectory() + "usercontent/");
-        File dbDirectory = new File(config.getUploadDirectory() + "usercontent/database.mv.db");
+        File dbFile = new File(config.getUploadDirectory() + "usercontent/database.mv.db");
         if (!uploadDirectory.exists()) {
             final boolean mkdirs = uploadDirectory.mkdirs();
             System.out.println("----" + mkdirs);
         }
-        if (!dbDirectory.exists()) {
+        if (!dbFile.exists()) {
             Database.createTable();
         }
     }
@@ -36,7 +36,6 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
        bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
             .put("/www","/static")
             .build()));
-
         bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
         bootstrap.addBundle(new MultiPartBundle());
     }
@@ -45,10 +44,11 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     @Override
     public void run(SkenavConfiguration configuration, Environment environment) {
         environment_setup(configuration,environment);
-        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory());
-        final HomeResources homeResources = new HomeResources();
-        final FileMgrResources fileMgrResources = new FileMgrResources();
         Database database = new Database();
+
+        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory());
+        final HomeResources homeResources = new HomeResources(database);
+        final FileMgrResources fileMgrResources = new FileMgrResources();
 
         String test = "test file name";
         database.addFile(test);
