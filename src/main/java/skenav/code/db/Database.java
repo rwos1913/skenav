@@ -7,16 +7,20 @@ import java.io.File;
 import java.sql.*;
 
 public class Database {
+    Connection con;
+
     public Database() {
         dbConnect();
     }
-    Connection con;
+
     public void dbConnect() {
         try{
             Class.forName("org.h2.Driver");
             con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
         }
-        catch (Exception e){};
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        };
     }
 
     public static void createTable() {
@@ -28,15 +32,18 @@ public class Database {
             stmt1.close();
             con.close();
         }
-        catch (Exception e){};
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        };
     }
+
     public void addFile(String filename) {
         try {
             PreparedStatement stmt2 = con.prepareStatement("INSERT INTO table1 (file_name)" + "VALUES (?)");
             stmt2.setString(1, filename);
             stmt2.executeUpdate();
             //stmt.executeUpdate("INSERT INTO table1 (file_name) VALUES ('hello')");
-// add parameterized query
+            // add parameterized query
             stmt2.close();
             con.close();
         } catch (Exception e) {
