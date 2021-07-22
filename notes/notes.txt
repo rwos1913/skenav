@@ -1,1 +1,13 @@
 server ip = http://127.0.0.1:8080/
+supported file types:
+jpeg
+mpeg
+png
+whatever the apple image and video file types are (maybe)
+txt
+exe no run tho
+major code file formats
+doc
+docx
+powerpoint
+mkv

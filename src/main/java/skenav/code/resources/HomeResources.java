@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 public class HomeResources {
     //Database database;
 
-    //public void HomeResource (Database database) {
+    //public void HomeResources (Database database) {
     //    this.database = database;
     //}
 

@@ -46,13 +46,13 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         environment_setup(configuration,environment);
         Database database = new Database();
 
-        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory());
+        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database);
         final HomeResources homeResources = new HomeResources();
         //final HomeResources homeResources = new HomeResources(database);
         final FileMgrResources fileMgrResources = new FileMgrResources();
 
-        String test = "test file name";
-        database.addFile(test);
+        //String test = "test";
+        //database.addFile(test);
         environment.jersey().register(MultiPartBundle.class);
         environment.jersey().register(uploadResources);
         environment.jersey().register(homeResources);

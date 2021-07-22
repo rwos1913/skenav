@@ -13,9 +13,12 @@ import skenav.code.db.Database;
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
     private String uploadDirectory;
+    Database database;
+    public UploadResources(String uploadDirectory, Database database) {
 
-    public UploadResources(String uploadDirectory) {
         this.uploadDirectory = uploadDirectory;
+        this.database = database;
+
     }
 
 
@@ -26,10 +29,11 @@ public class UploadResources {
     public Response uploadFile(
             @FormDataParam("file") final InputStream fileInputStream,
             @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
-
-        String uploadedFileLocation = uploadDirectory + "usercontent/" + contentDispositionHeader.getFileName();
-
+        String filename = contentDispositionHeader.getFileName();
+        String filetype = parseFileType(filename);
+        String uploadedFileLocation = uploadDirectory + "usercontent/" + filename;
         writeToFile(fileInputStream, uploadedFileLocation);
+        database.addFile(filename, filetype);
         String output = "File uploaded to : " + uploadedFileLocation;
         System.out.println(output);
         return Response.ok(output).build();
@@ -51,5 +55,14 @@ public class UploadResources {
         }
         out.flush();
         out.close();
+    }
+    private String parseFileType(String filename) {
+        String filetype = "";
+        int i = filename.lastIndexOf('.');
+        if (i > 0) {
+            filetype = filename.substring(i+1);
+        }
+
+        return filetype;
     }
 }
