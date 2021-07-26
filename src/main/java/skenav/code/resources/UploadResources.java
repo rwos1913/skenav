@@ -1,7 +1,6 @@
 package skenav.code.resources;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import skenav.code.views.UploadView;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -40,10 +39,6 @@ public class UploadResources {
 
     }
 
-    @GET
-    public UploadView UploadView(String uploadDirectory) {
-        return new UploadView(uploadDirectory);
-    }
 
     private void writeToFile(InputStream fileInputStream, String uploadedFileLocation) throws IOException {
         int read;

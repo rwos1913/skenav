@@ -11,3 +11,6 @@ function uploadprompt() {
     req.open("POST","/upload");
     req.send(formData);
 }
+function viewfiles() {
+
+}

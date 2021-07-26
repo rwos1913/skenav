@@ -1,5 +1,6 @@
 package skenav.code.db;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     Connection con;
@@ -40,7 +41,7 @@ public class Database {
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
-        };
+        }
     }
 
     public void addFile(String filename, String filetype) {
@@ -51,16 +52,31 @@ public class Database {
             statement.executeUpdate();
             statement.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     }
-    public void viewFiles() {
+    public ArrayList<ArrayList<String>> viewFiles() {
+        ArrayList<ArrayList<String>> fileinfo = new ArrayList<>();
         try{
-            PreparedStatement statement = con.prepareStatement("SELECT file_id, file_type FROM table1");
-            statement.executeUpdate();
+            PreparedStatement statement = con.prepareStatement("SELECT file_name, file_type FROM table1");
+            ResultSet rs =  statement.executeQuery();
+
+            while (rs.next()) {
+                ArrayList<String> file = new ArrayList<String>();
+                // adds file name to file array
+                file.add(rs.getString("file_name"));
+                // adds file type to file array
+                file.add(rs.getString("file_type"));
+                //adds this instance of file to fileinfo
+                fileinfo.add(file);
+            }
+            //System.out.println(fileinfo);
+            rs.close();
+            statement.close();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return fileinfo;
     }
 }

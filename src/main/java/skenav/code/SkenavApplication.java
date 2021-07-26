@@ -9,6 +9,7 @@ import io.dropwizard.views.ViewBundle;
 import skenav.code.db.Database;
 import skenav.code.resources.FileMgrResources;
 import skenav.code.resources.HomeResources;
+import skenav.code.resources.QueryResources;
 import skenav.code.resources.UploadResources;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import java.io.File;
@@ -50,9 +51,11 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         final HomeResources homeResources = new HomeResources();
         //final HomeResources homeResources = new HomeResources(database);
         final FileMgrResources fileMgrResources = new FileMgrResources();
+        final QueryResources queryResources = new QueryResources(database);
+        // TEST METHODS
+        //queryResources.viewFilesToJSON();
 
-        //String test = "test";
-        //database.addFile(test);
+        environment.jersey().register(queryResources);
         environment.jersey().register(MultiPartBundle.class);
         environment.jersey().register(uploadResources);
         environment.jersey().register(homeResources);
