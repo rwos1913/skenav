@@ -1,4 +1,7 @@
 package skenav.code.db;
+import skenav.code.security.LogicValidation;
+
+import javax.ws.rs.WebApplicationException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -55,10 +58,15 @@ public class Database {
             //System.out.println(e.getMessage());
         }
     }
-    public ArrayList<ArrayList<String>> viewFiles() {
+    public ArrayList<ArrayList<String>> viewFiles(String search, int limit) {
         ArrayList<ArrayList<String>> fileinfo = new ArrayList<>();
-        try{
-            PreparedStatement statement = con.prepareStatement("SELECT file_name, file_type FROM table1");
+        if (!LogicValidation.intInRange(limit,1,100) || !LogicValidation.searchLengthLimit(search)){
+            throw new WebApplicationException(400);
+        }
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT file_name, file_type FROM table1 WHERE file_name LIKE ? LIMIT ?");
+            statement.setString(1, "%" + search + "%");
+            statement.setInt(2, limit);
             ResultSet rs =  statement.executeQuery();
 
             while (rs.next()) {
