@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Database {
     Connection con;
-
+// constructor that calls method to connect to DB
     public Database() {
         connect();
     }
@@ -32,13 +32,13 @@ public class Database {
     private void endQuery() {
 
     }
-
+// creates db file and table. Called staticly from the application class if db does not already exist
     public static void createTable() {
         try {
             Class.forName("org.h2.Driver");
             Connection con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
             Statement statement = con.createStatement();
-            statement.executeUpdate("CREATE TABLE table1 (file_id INT GENERATED ALWAYS AS IDENTITY , file_name varchar(255), file_type varchar(255))");
+            statement.executeUpdate("CREATE TABLE table1 (file_id INT GENERATED ALWAYS AS IDENTITY , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
             statement.close();
             con.close();
         }
@@ -46,25 +46,46 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-
-    public void addFile(String filename, String filetype) {
+// adds file to database when uploaded
+    public void addFile(String filename, String filetype, String datetime) {
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO table1 (file_name, file_type) VALUES (?, ?) ");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO table1 (file_name, file_type, upload_datetime) VALUES (?, ?, ?) ");
             statement.setString(1, filename);
             statement.setString(2, filetype);
+            statement.setString(3, datetime);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e) {
             //System.out.println(e.getMessage());
         }
     }
-    public ArrayList<ArrayList<String>> viewFiles(String search, int limit) {
+    //arraylist of arraylist to store metadata for selected files
+    public ArrayList<ArrayList<String>> viewFiles(String search, int limit, int sortby) {
         ArrayList<ArrayList<String>> fileinfo = new ArrayList<>();
-        if (!LogicValidation.intInRange(limit,1,100) || !LogicValidation.searchLengthLimit(search)){
+        // checks that query limit and search string length are reasonable
+        if (!LogicValidation.intInRange(limit,1,100) || !LogicValidation.intInRange(search.length(), 0, 100) || !LogicValidation.intInRange(sortby, 0, 3)){
             throw new WebApplicationException(400);
         }
+        String selectquery = "";
+        if (sortby == 0) {
+            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY upload_datetime DESC LIMIT ?";
+        }
+        else if (sortby == 1) {
+            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY upload_datetime LIMIT ?";
+        }
+        else if (sortby == 2) {
+            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY LOWER(file_name) LIMIT ?";
+        }
+        else if (sortby == 3) {
+            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY LOWER(file_name) DESC LIMIT ?";
+        }
+        else {
+            throw new WebApplicationException(400);
+        }
+        // SQL parameterized select query with specified params
         try {
-            PreparedStatement statement = con.prepareStatement("SELECT file_name, file_type FROM table1 WHERE file_name LIKE ? LIMIT ?");
+            PreparedStatement statement = con.prepareStatement(selectquery);
+            // passing params into SQL query
             statement.setString(1, "%" + search + "%");
             statement.setInt(2, limit);
             ResultSet rs =  statement.executeQuery();
@@ -75,7 +96,9 @@ public class Database {
                 file.add(rs.getString("file_name"));
                 // adds file type to file array
                 file.add(rs.getString("file_type"));
-                //adds this instance of file to fileinfo
+                // adds upload date and time to file array
+                file.add(rs.getString("upload_datetime"));
+                // adds current instance of file array to array of files (fileinfo)
                 fileinfo.add(file);
             }
             //System.out.println(fileinfo);

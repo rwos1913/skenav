@@ -12,7 +12,7 @@ var getJson = function (url, callback) {
     };
     xhr.send();
 };
-getJson("/query",
+getJson("/query?limit=100",
     function (err, data) {
     if (err !== null) {
         alert("something went wrong " + err);

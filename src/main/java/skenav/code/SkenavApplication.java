@@ -13,11 +13,15 @@ import skenav.code.resources.QueryResources;
 import skenav.code.resources.UploadResources;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
-        // call to database test method definitely clean up when it becomes needed
+        // test code
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
     }
 
     private void environment_setup(SkenavConfiguration config, Environment environment) {
