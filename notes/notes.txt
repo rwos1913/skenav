@@ -11,3 +11,4 @@ doc
 docx
 powerpoint
 mkv
+watch videos on streams

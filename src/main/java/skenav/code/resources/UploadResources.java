@@ -1,4 +1,6 @@
 package skenav.code.resources;
+import org.bouncycastle.jcajce.provider.digest.SHA3;
+import org.bouncycastle.util.encoders.Hex;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -6,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -36,12 +39,14 @@ public class UploadResources {
             @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
+        String filehash = hashString(filename);
+        System.out.println(filehash);
         //TODO: better validate file type
         String datetime = getDateTime();
         String uploadedFileLocation = uploadDirectory + "usercontent/" + filename;
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
-        database.addFile(filename, filetype, datetime);
+        database.addFile(filehash, filename, filetype, datetime);
         String output = "File uploaded to : " + uploadedFileLocation;
         System.out.println(output);
         return Response.ok(output).build();
@@ -74,6 +79,13 @@ public class UploadResources {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
+    }
+    private String hashString (String input) {
+        SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
+        byte[] digest = digestSHA3.digest(input.getBytes());
+        SecureRandom random = new SecureRandom();
+        String output = Hex.toHexString(digest);
+        return output;
     }
 
 }

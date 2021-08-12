@@ -17,10 +17,27 @@ getJson("/query?limit=100",
     if (err !== null) {
         alert("something went wrong " + err);
     }else {
-        alert( "Your query count: " + data.query.count);
+         parseJson(data);
     }
     });
+function parseJson (data) {
+    for (let i = 0; i < data.length; i++) {
+        var currentrow = data[i];
+        var filename = currentrow[0];
+        var filetype = currentrow[1];
+        var uploaddate = currentrow[2];
+        displayFilesAsTable (filename,filetype,uploaddate);
 
+    }
+}
+function displayFilesAsTable (filename, filetype, uploaddate) {
+    var table = document.getElementById("tablebody");
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + filename + "</td>" +
+        "<td>" + filetype + "</td>" +
+        "<td>" + uploaddate + "</td>";
+    table.appendChild(tr);
+}
 function upload() {
     var fileupload = document.getElementById("file");
     fileupload.click();
