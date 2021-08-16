@@ -18,9 +18,10 @@ import skenav.code.db.Database;
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
     private String uploadDirectory;
+    private String hashFilename;
     Database database;
-    public UploadResources(String uploadDirectory, Database database) {
-
+    public UploadResources(String uploadDirectory, Database database, String hashFilename) {
+        this.hashFilename = hashFilename;
         this.uploadDirectory = uploadDirectory;
         this.database = database;
 
@@ -40,10 +41,18 @@ public class UploadResources {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
-        System.out.println(filehash);
+        //System.out.println(filehash);
+        String filestring;
+        boolean b1 = Boolean.parseBoolean(hashFilename);
+        if (b1 == true) {
+            filestring = filehash;
+        }
+        else {
+            filestring = filename;
+        }
         //TODO: better validate file type
         String datetime = getDateTime();
-        String uploadedFileLocation = uploadDirectory + "usercontent/" + filename;
+        String uploadedFileLocation = uploadDirectory + "usercontent/" + filestring + ".";
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
         database.addFile(filehash, filename, filetype, datetime);

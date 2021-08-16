@@ -1,1 +1,2 @@
 uploadDirectory: /Users/currycarr/   # expects trailing slash
+hashFilename: true                   # expects true or false

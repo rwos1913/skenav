@@ -2,6 +2,7 @@ package skenav.code;
 
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -52,7 +53,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         environment_setup(configuration,environment);
         Database database = new Database();
 
-        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database);
+        final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database, configuration.getHashFilename());
         final HomeResources homeResources = new HomeResources();
         //final HomeResources homeResources = new HomeResources(database);
         final FileMgrResources fileMgrResources = new FileMgrResources();
