@@ -40,7 +40,10 @@
     margin-right: 3%;
     margin-left: 3%;
     margin-top: 20px;
-    height: 90%
+    height: 90%;
+}
+#filedisplaybox {
+    height: inherit;
 }
 #upperbar {
     margin-right: fill;

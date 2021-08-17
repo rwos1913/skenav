@@ -20,14 +20,26 @@
         <assetBundle.version>1.0.5</assetBundle.version>
         <jupiter.version>5.8.0-M1</jupiter.version>
         <junit.platform.version>1.8.0-M1</junit.platform.version>
-        <derby.version>10.15.2.0</derby.version>
+        <h2.version>1.4.200</h2.version>
+        <commonsIO.version>2.11.0</commonsIO.version>
+        <bouncycastle.version>1.69</bouncycastle.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commonsIO.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>

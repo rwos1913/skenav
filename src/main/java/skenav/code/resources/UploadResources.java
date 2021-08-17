@@ -1,20 +1,30 @@
 package skenav.code.resources;
+import org.bouncycastle.jcajce.provider.digest.SHA3;
+import org.bouncycastle.util.encoders.Hex;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import skenav.code.views.UploadView;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import skenav.code.db.Database;
 
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
     private String uploadDirectory;
-
-    public UploadResources(String uploadDirectory) {
+    private String hashFilename;
+    Database database;
+    public UploadResources(String uploadDirectory, Database database, String hashFilename) {
+        this.hashFilename = hashFilename;
         this.uploadDirectory = uploadDirectory;
+        this.database = database;
+
     }
 
 
@@ -22,24 +32,37 @@ public class UploadResources {
     //@Path("upload")
     //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    // receives post from client
     public Response uploadFile(
+            //gets inputstream from html form
             @FormDataParam("file") final InputStream fileInputStream,
+            //gets content disposition from html form
             @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
-
-        String uploadedFileLocation = uploadDirectory + "usercontent/" + contentDispositionHeader.getFileName();
-
+        String filename = contentDispositionHeader.getFileName();
+        String filetype = parseFileType(filename);
+        String filehash = hashString(filename);
+        //System.out.println(filehash);
+        String filestring;
+        boolean b1 = Boolean.parseBoolean(hashFilename);
+        if (b1 == true) {
+            filestring = filehash;
+        }
+        else {
+            filestring = filename;
+        }
+        //TODO: better validate file type
+        String datetime = getDateTime();
+        String uploadedFileLocation = uploadDirectory + "usercontent/" + filestring + ".";
+        // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
+        database.addFile(filehash, filename, filetype, datetime);
         String output = "File uploaded to : " + uploadedFileLocation;
         System.out.println(output);
         return Response.ok(output).build();
 
     }
 
-    @GET
-    public UploadView UploadView(String uploadDirectory) {
-        return new UploadView(uploadDirectory);
-    }
-
+// writes file from inputstream to disk
     private void writeToFile(InputStream fileInputStream, String uploadedFileLocation) throws IOException {
         int read;
         final int BUFFER_LENGTH = 1024;
@@ -51,4 +74,27 @@ public class UploadResources {
         out.flush();
         out.close();
     }
+    //checks extension for file type
+    private String parseFileType(String filename) {
+        String filetype = "";
+        int i = filename.lastIndexOf('.');
+        if (i > 0) {
+            filetype = filename.substring(i+1);
+        }
+
+        return filetype;
+    }
+    private String getDateTime() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        return dtf.format(now);
+    }
+    private String hashString (String input) {
+        SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
+        byte[] digest = digestSHA3.digest(input.getBytes());
+        SecureRandom random = new SecureRandom();
+        String output = Hex.toHexString(digest);
+        return output;
+    }
+
 }

@@ -41,14 +41,21 @@
             </div>
             <div id="searchbox" class="fmboxbutton">
                 <!--search box-->
-                <p class="fmbuttontext">Search Bar</p>
+                <input type="search" id="search">
             </div>
         </div>
         <div id="filedisplaybox">
             <!-- sub box in which the actual files are displayed-->
-            <div>
-                <!-- dynamically generate file icons here-->
-            </div>
+            <table id="filetable">
+                <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>File Type</th>
+                    <th>Upload Date</th>
+                </tr>
+                </thead>
+                <tbody id="tablebody"></tbody>
+            </table>
         </div>
     </div>
 </div>
