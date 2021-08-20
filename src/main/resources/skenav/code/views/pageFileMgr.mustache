@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <link href="/static/css/filemgr.css" rel="stylesheet">
     <script src="/static/js/filemgr.js"></script>
 </head>
@@ -41,7 +42,7 @@
             </div>
             <div id="searchbox" class="fmboxbutton">
                 <!--search box-->
-                <input type="search" id="search">
+                <input type="search" id="search" onInput="getSearchString()" name="search">
             </div>
         </div>
         <div id="filedisplaybox">

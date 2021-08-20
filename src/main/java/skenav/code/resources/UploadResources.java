@@ -41,7 +41,7 @@ public class UploadResources {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
-        //System.out.println(filehash);
+        System.out.println("file name from contend dispo header is:" + filename);
         String filestring;
         boolean b1 = Boolean.parseBoolean(hashFilename);
         if (b1 == true) {
@@ -50,13 +50,13 @@ public class UploadResources {
         else {
             filestring = filename;
         }
-        //TODO: better validate file type
+        //TODO: allow appending of file extension to hashed file names or just do that by defualt idk
         String datetime = getDateTime();
-        String uploadedFileLocation = uploadDirectory + "usercontent/" + filestring + ".";
+        String uploadedFileLocation = uploadDirectory + "usercontent/" + filestring;
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
         database.addFile(filehash, filename, filetype, datetime);
-        String output = "File uploaded to : " + uploadedFileLocation;
+        String output = "Upload successful!";
         System.out.println(output);
         return Response.ok(output).build();
 
@@ -80,6 +80,12 @@ public class UploadResources {
         int i = filename.lastIndexOf('.');
         if (i > 0) {
             filetype = filename.substring(i+1);
+        }
+        else if (i == -1) {
+            filetype = "?";
+        }
+        else {
+            throw new WebApplicationException(400);
         }
 
         return filetype;
