@@ -11,6 +11,7 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import skenav.code.db.Database;
 
@@ -76,19 +77,48 @@ public class UploadResources {
     }
     //checks extension for file type
     private String parseFileType(String filename) {
-        String filetype = "";
+        String filetype;
+        String rawfiletype;
         int i = filename.lastIndexOf('.');
         if (i > 0) {
-            filetype = filename.substring(i+1);
+            rawfiletype = filename.substring(i+1);
+            filetype = makeTypePretty(rawfiletype);
         }
         else if (i == -1) {
-            filetype = "?";
+            filetype = "unknown";
         }
         else {
             throw new WebApplicationException(400);
         }
 
         return filetype;
+    }
+    private String makeTypePretty(String rawfiletype) {
+        String rft = rawfiletype.toLowerCase();
+        String prettyfiletype;
+        System.out.println(rft);
+        if (rft.equals("jpg")) {
+            prettyfiletype = "JPEG image";
+        }
+        else if (rft.equals("pdf")) {
+            prettyfiletype= "PDF document";
+        }
+        else if (rft.equals("png")) {
+            prettyfiletype= "PNG image";
+        }
+        else if (rft.equals("txt")) {
+            prettyfiletype= "Plain Text Document";
+        }
+        else if (rft.equals("docx") || rft.equals("doc")) {
+            prettyfiletype= "Word Document";
+        }
+        else if (rft.equals("rtf")) {
+            prettyfiletype = "RTF Document";
+        }
+        else {
+            prettyfiletype = "unknown extension: " + rawfiletype;
+        }
+        return prettyfiletype;
     }
     private String getDateTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

@@ -19,11 +19,13 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
         // test code
+
     }
 
     private void environment_setup(SkenavConfiguration config, Environment environment) {

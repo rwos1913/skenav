@@ -38,16 +38,20 @@
             </div>
             <div id="filterbutton" class="fmboxbutton">
                 <!-- filter button -->
-                <p class="fmbuttontext">Filter</p>
+                <button onclick="dropDown()" class="fmboxbutton">Sort</button>
+                <div id="dropdownoptions">
+                </div>
             </div>
-            <div id="searchbox" class="fmboxbutton">
-                <!--search box-->
                 <input type="search" id="search" onInput="getSearchString()" name="search">
-            </div>
         </div>
         <div id="filedisplaybox">
             <!-- sub box in which the actual files are displayed-->
             <table id="filetable">
+                <colgroup>
+                    <col id="filenamecolumn">
+                    <col id="filetypecolumn">
+                    <col id="uploaddatecolumn">
+                </colgroup>
                 <thead>
                 <tr>
                     <th>File Name</th>
