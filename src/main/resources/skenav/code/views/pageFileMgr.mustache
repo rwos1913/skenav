@@ -36,13 +36,14 @@
                 <!-- upload button -->
                 <p class="fmbuttontext">Upload File</p>
             </div>
-            <div id="filterbutton" class="fmboxbutton">
-                <!-- filter button -->
-                <button onclick="dropDown()" class="fmboxbutton">Sort</button>
-                <div id="dropdownoptions">
-                </div>
-            </div>
+            <div id="searchbox">
                 <input type="search" id="search" onInput="getSearchString()" name="search">
+            </div>
+            <div id="filterbutton" class="fmboxbutton">
+                <!-- view button -->
+                <p class="fmbuttontext">View</p>
+            </div>
+                <!--<input type="search" id="search" onInput="getSearchString()" name="search"> -->
         </div>
         <div id="filedisplaybox">
             <!-- sub box in which the actual files are displayed-->
@@ -54,9 +55,9 @@
                 </colgroup>
                 <thead>
                 <tr>
-                    <th>File Name</th>
+                    <th onclick="fileNameSort()">File Name</th>
                     <th>File Type</th>
-                    <th>Upload Date</th>
+                    <th onclick="uploadDateSort()">Upload Date</th>
                 </tr>
                 </thead>
                 <tbody id="tablebody"></tbody>

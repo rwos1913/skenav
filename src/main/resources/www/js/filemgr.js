@@ -13,17 +13,39 @@ var getJson = function (url, callback) {
     };
     xhr.send();
 };
-
+let search = "";
+let sort = "";
 function getSearchString() {
-    clearTable("tablebody");
+    //clearTable("tablebody");
     searchvalue = document.getElementById("search");
-    var search = searchvalue.value;
+    search = searchvalue.value;
     console.log(search);
-    let url = "/query?limit=100&search=" + search;
+    let url = "/query?limit=100&search=" + search + "&sort" + sort;
     getJson(url, callback);
 
 }
-
+function fileNameSort() {
+    if (sort == 2) {
+        sort = 3;
+    }
+    else {
+        sort = 2;
+    }
+    console.log(sort);
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+    console.log(url);
+    getJson(url, callback);
+}
+function uploadDateSort() {
+    if (sort == 0) {
+        sort = 1;
+    }
+    else {
+        sort = 0;
+    }
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+    getJson(url, callback);
+}
 getJson("/query?limit=100", callback);
 
 function callback (err, data) {
@@ -35,6 +57,7 @@ function callback (err, data) {
 }
 
 function parseJson (data) {
+    clearTable("tablebody");
     for (let i = 0; i < data.length; i++) {
         var currentrow = data[i];
         var filename = currentrow[0];

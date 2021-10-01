@@ -44,7 +44,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
        bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
             .put("/www", "/static")
-               .put("/assets", "/files")
+               .put("/usercontent/", "/files")
             .build()));
         bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
         bootstrap.addBundle(new MultiPartBundle());
