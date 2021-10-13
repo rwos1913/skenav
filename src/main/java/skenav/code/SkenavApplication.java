@@ -9,6 +9,7 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
+import org.bytedeco.javacpp.Loader;
 import skenav.code.db.Database;
 import skenav.code.resources.FileMgrResources;
 import skenav.code.resources.HomeResources;
@@ -25,6 +26,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
         // test code
+        /*String ffmpeg = Loader.load(org.bytedeco.ffmpeg.ffmpeg.class);
+        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i","/Users/currycarr/usercontent/Greenland.2020.1080p.BluRay.x264.AAC5.1-[YTS.MX].mp4", "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", "/Users/currycarr/usercontent/testhlsjava.m3u8");
+        pb.inheritIO().start().waitFor();*/
 
     }
 
