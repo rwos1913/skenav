@@ -24,6 +24,7 @@ public class QueryResources {
             // adding queryparams to be called by client using js
             @DefaultValue("")
             @QueryParam("search") String search,
+            @DefaultValue("50")
             @QueryParam("limit") int limit,
             @DefaultValue("0")
             @QueryParam("sort") int sortby

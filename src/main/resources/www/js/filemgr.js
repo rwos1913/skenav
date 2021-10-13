@@ -1,3 +1,4 @@
+// TODO: refresh table after upload to show new file
 var getJson = function (url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -12,36 +13,87 @@ var getJson = function (url, callback) {
     };
     xhr.send();
 };
-getJson("/query?limit=100",
-    function (err, data) {
+let search = "";
+let sort = "";
+function getSearchString() {
+    //clearTable("tablebody");
+    searchvalue = document.getElementById("search");
+    search = searchvalue.value;
+    console.log(search);
+    let url = "/query?limit=100&search=" + search + "&sort" + sort;
+    getJson(url, callback);
+
+}
+function fileNameSort() {
+    if (sort == 2) {
+        sort = 3;
+    }
+    else {
+        sort = 2;
+    }
+    console.log(sort);
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+    console.log(url);
+    getJson(url, callback);
+}
+function uploadDateSort() {
+    if (sort == 0) {
+        sort = 1;
+    }
+    else {
+        sort = 0;
+    }
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+    getJson(url, callback);
+}
+getJson("/query?limit=100", callback);
+
+function callback (err, data) {
     if (err !== null) {
         alert("something went wrong " + err);
     }else {
-         parseJson(data);
+        parseJson(data);
     }
-    });
+}
+
 function parseJson (data) {
+    clearTable("tablebody");
     for (let i = 0; i < data.length; i++) {
         var currentrow = data[i];
         var filename = currentrow[0];
         var filetype = currentrow[1];
         var uploaddate = currentrow[2];
-        displayFilesAsTable (filename,filetype,uploaddate);
+        displayFilesAsTable (filename,filetype,uploaddate, i);
 
     }
 }
-function displayFilesAsTable (filename, filetype, uploaddate) {
+
+function displayFilesAsTable (filename, filetype, uploaddate, i) {
     var table = document.getElementById("tablebody");
     var tr = document.createElement("tr");
-    tr.innerHTML = "<td>" + filename + "</td>" +
-        "<td>" + filetype + "</td>" +
-        "<td>" + uploaddate + "</td>";
+    if ((i + 1)%2 == 0) {
+        tr.className = "eventablerow";
+    }
+    else {
+        tr.className = "oddtablerow";
+    }
+    var td0 = tr.insertCell(0);
+    td0.textContent = filename;
+    var td1 = tr.insertCell(1);
+    td1.textContent = filetype;
+    td1.className = "tablecell"
+    //TODO: replace file types with icons
+    var td2 = tr.insertCell(2);
+    td2.className = "tablecell"
+    td2.textContent = uploaddate;
     table.appendChild(tr);
 }
+
 function upload() {
     var fileupload = document.getElementById("file");
     fileupload.click();
 }
+
 function uploadprompt() {
     var fileupload = document.getElementById("file").files[0];
     var req = new XMLHttpRequest();
@@ -50,4 +102,12 @@ function uploadprompt() {
     formData.append("file", fileupload);
     req.open("POST","/upload");
     req.send(formData);
+}
+
+function clearTable (elementID) {
+    var div = document.getElementById(elementID);
+
+    while(div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
 }
