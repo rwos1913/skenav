@@ -77,6 +77,7 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     else {
         tr.className = "oddtablerow";
     }
+    tr.onclick = function() {playVideo(filename)};
     var td0 = tr.insertCell(0);
     td0.textContent = filename;
     var td1 = tr.insertCell(1);
@@ -88,7 +89,14 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     td2.textContent = uploaddate;
     table.appendChild(tr);
 }
-
+function playVideo(filename) {
+    console.log(filename);
+    var videoUrl = "/video?name=" + filename;
+    var xhr = new XMLHttpRequest();
+    xhr.open( "GET", videoUrl, true);
+    xhr.responseType = "json";
+    xhr.send(null);
+}
 function upload() {
     var fileupload = document.getElementById("file");
     fileupload.click();

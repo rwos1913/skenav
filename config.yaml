@@ -1,5 +1,5 @@
 uploadDirectory: /Users/currycarr/   # expects trailing slash
-hashFilename: true                   # expects true or false
+hashFilename: false                  # expects true or false
 assets:
   overrides:
     /files: /Users/currycarr/usercontent/
