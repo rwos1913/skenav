@@ -10,8 +10,8 @@ static ExecutorService pool;
         System.out.println("thread pool created");
 
     }
-    public void executeThread(String filename, String uploaddirectory){
-        Runnable r = new VideoEncoder(filename, uploaddirectory);
+    public void executeThread(String filename, String uploaddirectory, String hlsfilename){
+        Runnable r = new VideoEncoder(filename, uploaddirectory, hlsfilename);
         pool.execute(r);
     }
 

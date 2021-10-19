@@ -29,12 +29,17 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     private void environment_setup(SkenavConfiguration config, Environment environment) {
         File uploadDirectory = new File(config.getUploadDirectory() + "usercontent/");
         File dbFile = new File(config.getUploadDirectory() + "usercontent/database.mv.db");
+        File hlsDirectory = new File(config.getUploadDirectory() + "usercontent/hlstestfolder");
         if (!uploadDirectory.exists()) {
             final boolean mkdirs = uploadDirectory.mkdirs();
             System.out.println("----" + mkdirs);
         }
         if (!dbFile.exists()) {
             Database.createTable();
+        }
+        if (!hlsDirectory.exists()) {
+            final boolean mkdirs = hlsDirectory.mkdirs();
+            System.out.println("----" + mkdirs);
         }
         // creates thread pool
         ThreadManagement threadManagement = new ThreadManagement();

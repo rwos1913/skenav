@@ -3,7 +3,7 @@
     <meta charset="UTF-8"/>
     <link href="/static/css/filemgr.css" rel="stylesheet">
     <script src="/static/js/filemgr.js"></script>
-    <!--<script src="//cdn.jsdelivr.net/npm/hls.js@latest"></script>-->
+    <<script src="/static/js/hls.js"></script>
 </head>
 <body>
 <form id="uploadform" action="/upload" method="POST" class="hidden" enctype="multipart/form-data">
@@ -26,7 +26,7 @@
             hls.attachMedia(video);
             hls.on(Hls.Events.MEDIA_ATTACHED, function () {
                 console.log('video and hls.js are now bound together');
-                hls.loadSource('/files/testhlsjava.m3u8');
+                hls.loadSource('/files/hlstestfolder/Greenland.2020.1080p.BluRay.x264.AAC5.1-[YTS.MX].m3u8');
                 hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                     console.log(
                             'manifest loaded, found' + data.levels.length + 'quality level'
@@ -82,6 +82,9 @@
                 </thead>
                 <tbody id="tablebody"></tbody>
             </table>
+            <!--<div id="videoplayer">
+                <p>this is a test</p>
+            </div>-->
         </div>
     </div>
 </div>

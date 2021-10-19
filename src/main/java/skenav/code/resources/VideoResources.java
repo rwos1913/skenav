@@ -3,6 +3,7 @@ package skenav.code.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javassist.bytecode.stackmap.BasicBlock;
+import org.apache.commons.io.FilenameUtils;
 import org.bytedeco.javacpp.Loader;
 import skenav.code.ThreadManagement;
 import skenav.code.VideoEncoder;
@@ -14,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Path("video")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,23 +30,33 @@ String uploadDirectory;
             @QueryParam("name") String filename
     ) throws IOException, InterruptedException {
         System.out.println(filename);
-        // call encoder thread thing
-        //Runnable r1 = new VideoEncoder(filename);
+        String hlsfilename = parseHlsFileName(filename);
+        // calls method to encode video in a thread
+        //TODO: delete hls playlist after usage
         ThreadManagement threadManagement = new ThreadManagement();
-        threadManagement.executeThread(filename, uploadDirectory);
-        System.out.println("testing if this thread works");
+        threadManagement.executeThread(filename, uploadDirectory, hlsfilename);
+        // waits for 3 seconds
+        //TODO: exponential backoff for checking if playlist has been generated
+        TimeUnit.SECONDS.sleep(3);
+        System.out.println("testing time delay");
+        // writes filename to json and returns to front end javascript
         ObjectMapper mapper = new ObjectMapper();
         String json = new String();
         try {
             // sets string json as the filebundle string when converted to json
-            json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(filename);
+            json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(hlsfilename);
             System.out.println(json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         return json;
     }
-// encodes video from mp4to hls
+    private String parseHlsFileName(String filename) {
+        String noextfilename = FilenameUtils.removeExtension(filename);
+        String hlsfilename = noextfilename + ".m3u8";
+        System.out.println(hlsfilename);
+        return hlsfilename;
+    }
     //TODO: Make encoding methods for other types of video
 
 }
