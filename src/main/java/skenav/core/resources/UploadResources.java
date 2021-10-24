@@ -1,4 +1,4 @@
-package skenav.code.resources;
+package skenav.core.resources;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -11,9 +11,8 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
-import skenav.code.db.Database;
+import skenav.core.db.Database;
 
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)

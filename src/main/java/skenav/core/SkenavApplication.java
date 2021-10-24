@@ -1,23 +1,15 @@
-package skenav.code;
+package skenav.core;
 
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.Application;
-import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import org.bouncycastle.jcajce.provider.digest.SHA3;
-import org.bouncycastle.util.encoders.Hex;
-import org.bytedeco.javacpp.Loader;
-import skenav.code.db.Database;
-import skenav.code.resources.*;
+import skenav.core.db.Database;
+import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {

@@ -1,7 +1,6 @@
-package skenav.code.resources;
+package skenav.core.resources;
 
-import skenav.code.db.Database;
-import skenav.code.views.HomeView;
+import skenav.core.views.HomeView;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,6 +1,6 @@
-package skenav.code.resources;
+package skenav.core.resources;
 
-import skenav.code.views.FileMgrView;
+import skenav.core.views.FileMgrView;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,12 +1,10 @@
-package skenav.code.resources;
+package skenav.core.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import skenav.code.db.Database;
+import skenav.core.db.Database;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 @Path("query")
 @Produces(MediaType.APPLICATION_JSON)

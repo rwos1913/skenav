@@ -1,19 +1,15 @@
-package skenav.code.resources;
+package skenav.core.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javassist.bytecode.stackmap.BasicBlock;
 import org.apache.commons.io.FilenameUtils;
-import org.bytedeco.javacpp.Loader;
-import skenav.code.ThreadManagement;
-import skenav.code.VideoEncoder;
+import skenav.core.ThreadManagement;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 

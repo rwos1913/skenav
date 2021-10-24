@@ -1,5 +1,5 @@
-package skenav.code.db;
-import skenav.code.security.LogicValidation;
+package skenav.core.db;
+import skenav.core.security.LogicValidation;
 
 import javax.ws.rs.WebApplicationException;
 import java.sql.*;

@@ -1,4 +1,4 @@
-package skenav.code.security;
+package skenav.core.security;
 
 public class LogicValidation {
     public static boolean intInRange(int input, int lowerbound, int upperbound){

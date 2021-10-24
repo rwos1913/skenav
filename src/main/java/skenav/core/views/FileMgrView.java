@@ -1,4 +1,4 @@
-package skenav.code.views;
+package skenav.core.views;
 
 import io.dropwizard.views.View;
 

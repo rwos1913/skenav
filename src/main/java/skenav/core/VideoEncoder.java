@@ -1,8 +1,7 @@
-package skenav.code;
+package skenav.core;
 
 import org.bytedeco.javacpp.Loader;
 
-import javax.security.auth.login.Configuration;
 import java.io.IOException;
 
 public class VideoEncoder implements Runnable{

@@ -1,4 +1,4 @@
-package skenav.code.health;
+package skenav.core.health;
 
 import com.codahale.metrics.health.HealthCheck;
 

@@ -1,6 +1,4 @@
-package skenav.code.resources;
-
-import skenav.code.db.Database;
+package skenav.core.resources;
 
 public class DatabaseResources {
 

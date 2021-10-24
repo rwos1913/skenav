@@ -1,4 +1,4 @@
-package skenav.code;
+package skenav.core;
 
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;

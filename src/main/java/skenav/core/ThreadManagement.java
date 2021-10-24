@@ -1,4 +1,4 @@
-package skenav.code;
+package skenav.core;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
