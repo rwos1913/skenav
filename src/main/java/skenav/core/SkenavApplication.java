@@ -19,9 +19,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     }
 
     private void environment_setup(SkenavConfiguration config, Environment environment) {
-        File uploadDirectory = new File(config.getUploadDirectory() + "usercontent/");
-        File dbFile = new File(config.getUploadDirectory() + "usercontent/database.mv.db");
-        File hlsDirectory = new File(config.getUploadDirectory() + "usercontent/hlstestfolder");
+        File uploadDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator());
+        File dbFile = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "database.mv.db");
+        File hlsDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "hlstestfolder");
         if (!uploadDirectory.exists()) {
             final boolean mkdirs = uploadDirectory.mkdirs();
             System.out.println("----" + mkdirs);
@@ -42,7 +42,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
        bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
             .put("/www", "/static")
-               .put("/usercontent/", "/files")
+               .put(OS.getUserContentDirectory(), "/files")
             .build()));
         bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
         bootstrap.addBundle(new MultiPartBundle());

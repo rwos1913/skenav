@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import skenav.core.OS;
 import skenav.core.db.Database;
 
 @Path("upload")
@@ -52,7 +53,7 @@ public class UploadResources {
         }
         //TODO: allow appending of file extension to hashed file names or just do that by defualt idk
         String datetime = getDateTime();
-        String uploadedFileLocation = uploadDirectory + "usercontent/" + filestring;
+        String uploadedFileLocation = uploadDirectory + "usercontent" + OS.pathSeparator() + filestring;
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
         database.addFile(filehash, filename, filetype, datetime);

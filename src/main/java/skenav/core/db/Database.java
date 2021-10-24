@@ -1,4 +1,5 @@
 package skenav.core.db;
+import skenav.core.OS;
 import skenav.core.security.LogicValidation;
 
 import javax.ws.rs.WebApplicationException;
@@ -15,7 +16,7 @@ public class Database {
     private void connect() {
         try{
             Class.forName("org.h2.Driver");
-            con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
+            con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -36,7 +37,7 @@ public class Database {
     public static void createTable() {
         try {
             Class.forName("org.h2.Driver");
-            Connection con = DriverManager.getConnection("jdbc:h2:~/usercontent/database");
+            Connection con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
             Statement statement = con.createStatement();
             statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
             statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(255))");
