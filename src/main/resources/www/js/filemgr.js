@@ -119,6 +119,7 @@ function playVideo(playlistname) {
             console.log('video and hls.js are now bound together');
             hls.loadSource('/files/hlstestfolder/' + playlistname);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                hls.startLoad(0)
                 console.log(
                     'manifest loaded, found' + data.levels.length + 'quality level'
                 );

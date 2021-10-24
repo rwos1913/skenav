@@ -19,7 +19,7 @@ public class VideoEncoder implements Runnable{
         // get upload directory
         String pathToVideo = uploaddirectory + "usercontent/" + filename;
         String ffmpeg = Loader.load(org.bytedeco.ffmpeg.ffmpeg.class);
-        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathToVideo, "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", uploaddirectory +"usercontent/hlstestfolder/" + hlsfilename);
+        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathToVideo, "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-hls_playlist_type", "event", "-f", "hls", uploaddirectory +"usercontent/hlstestfolder/" + hlsfilename);
         try {
             pb.inheritIO().start().waitFor();
         } catch (InterruptedException e) {
