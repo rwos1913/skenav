@@ -43,10 +43,14 @@
     height: 90%;
 }
 #filedisplaybox {
-    overflow-y: scroll;
+    overflow: scroll;
     height: 95%;
     position: relative;
-
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#filedisplaybox::-webkit-scrollbar {
+    display: none;
 }
 #filetable {
     width: 100%;
@@ -57,11 +61,16 @@
 #videoplayer {
     height: inherit;
     width: 100%;
-    z-index: 1;
+    z-index: 3;
     position: absolute;
     top: 0;
     left: 0;
-    background: white;
+    background: black;
+}
+#video {
+    height: 100%;
+    width: 100%
+
 }
 #upperbar {
     margin-right: fill;

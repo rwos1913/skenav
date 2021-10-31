@@ -34,8 +34,8 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
             System.out.println("----" + mkdirs);
         }
         // creates thread pool
-        ThreadManagement threadManagement = new ThreadManagement();
-        threadManagement.createThreadPool();
+       // ThreadManagement threadManagement = new ThreadManagement();
+        //.threadManagement.createThreadPool();
     }
 
     @Override
