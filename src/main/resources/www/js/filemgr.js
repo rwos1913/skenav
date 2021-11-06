@@ -57,7 +57,7 @@ function callback (err, data) {
 }
 
 function parseJson (data) {
-    clearTable("tablebody");
+    clearTable();
     for (let i = 0; i < data.length; i++) {
         var currentrow = data[i];
         var filename = currentrow[0];
@@ -126,6 +126,7 @@ function playVideo(playlistname) {
             });
         });
     }
+    clearTable();
     document.getElementById("filedisplaybox").appendChild(videodiv);
 }
 function upload() {
@@ -143,8 +144,8 @@ function uploadprompt() {
     req.send(formData);
 }
 
-function clearTable (elementID) {
-    var div = document.getElementById(elementID);
+function clearTable () {
+    var div = document.getElementById("tablebody");
 
     while(div.firstChild) {
         div.removeChild(div.firstChild);
