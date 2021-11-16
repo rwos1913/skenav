@@ -20,7 +20,7 @@ function getSearchString() {
     searchvalue = document.getElementById("search");
     search = searchvalue.value;
     console.log(search);
-    let url = "/query?limit=100&search=" + search + "&sort" + sort;
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
     getJson(url, callback);
 
 }

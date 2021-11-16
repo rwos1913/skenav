@@ -9,7 +9,11 @@ import io.dropwizard.views.ViewBundle;
 import skenav.core.db.Database;
 import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import skenav.core.security.ServletRequestFilter;
+
+import javax.servlet.DispatcherType;
 import java.io.File;
+import java.util.EnumSet;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -69,6 +73,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         environment.jersey().register(homeResources);
         environment.jersey().register(fileMgrResources);
         environment.jersey().register(videoResources);
+        environment.servlets().addFilter("custom filter name", new ServletRequestFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
 
     }
