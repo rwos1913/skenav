@@ -2,8 +2,8 @@
 <head>
     <meta charset="UTF-8"/>
     <link href="/static/css/filemgr.css" rel="stylesheet">
-    <script src="/static/js/filemgr.js"></script>
-    <script src="/static/js/hls.js"></script>
+    <script type="application/javascript" src="/static/js/filemgr.js"></script>
+    <script type="application/javascript" src="/static/js/hls.js"></script>
 </head>
 <body>
 <form id="uploadform" action="/upload" method="POST" class="hidden" enctype="multipart/form-data">
@@ -16,25 +16,6 @@
         <!-- logo -->
         <img id="filemgrlogo" src="/static/image/logo.svg">
     </div>
-    <!--<video id ="video"></video>
-    <script>
-        if (Hls.isSupported()) {
-            console.log('hello hls.js');
-            var video = document.getElementById('video');
-            var hls = new Hls();
-            // bind them together
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-                console.log('video and hls.js are now bound together');
-                hls.loadSource('/files/hlstestfolder/Greenland.2020.1080p.BluRay.x264.AAC5.1-[YTS.MX].m3u8');
-                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-                    console.log(
-                            'manifest loaded, found' + data.levels.length + 'quality level'
-                    );
-                });
-            });
-        }
-    </script>-->
     <div id="pageselectbuttoncontainer">
         <!-- container for file manager and media suite buttons -->
         <div id="filemgrbutton" class="button">
