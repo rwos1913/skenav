@@ -64,6 +64,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         final FileMgrResources fileMgrResources = new FileMgrResources();
         final QueryResources queryResources = new QueryResources(database);
         final VideoResources videoResources = new VideoResources(configuration.getUploadDirectory());
+        final LoginResources loginResources = new LoginResources();
         // TEST METHODS
         //queryResources.viewFilesToJSON();
 
@@ -73,6 +74,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         environment.jersey().register(homeResources);
         environment.jersey().register(fileMgrResources);
         environment.jersey().register(videoResources);
+        environment.jersey().register(loginResources);
         environment.servlets().addFilter("custom filter name", new ServletRequestFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
 

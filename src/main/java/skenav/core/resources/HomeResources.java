@@ -1,6 +1,6 @@
 package skenav.core.resources;
 
-import skenav.core.views.HomeView;
+import skenav.core.views.LoginView;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -17,7 +17,7 @@ public class HomeResources {
     //}
 
     @GET
-    public HomeView Homeview() {
-        return new HomeView();
+    public LoginView Homeview() {
+        return new LoginView();
     }
 }

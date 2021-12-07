@@ -42,7 +42,7 @@ public class UploadResources {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
-        System.out.println("file name from contend dispo header is:" + filename);
+        System.out.println("file name from content dispo header is:" + filename);
         String filestring;
         //boolean b1 = Boolean.parseBoolean(hashFilename);
         if (hashFilename.equals("true")) {

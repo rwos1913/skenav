@@ -1,0 +1,68 @@
+#container { /* centers the logo*/
+    width: 65%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#logo {
+}
+#loginbox {
+    border-style: solid;
+    width: 100%;
+}
+.logininput {
+    border-style: none;
+    border-radius: 0px;
+    border-bottom-style: solid;
+    border-bottom-color: dimgrey;
+}
+#username {
+    margin-left: 0%;
+    width: 47%;
+}
+#password {
+    margin-right: 0%;
+    width: 47%;
+    float: right;
+}
+#remembermecontainer {
+    margin-left: 0%;
+    display: inline;
+    position: absolute;
+    bottom: 0%;
+}
+#toregisterbutton{
+    float: right;
+    margin-right: 10%;
+}
+#loginbutton {
+    margin-right: 10%;
+    float: right;
+}
+#regusername {
+    margin-left: 0%;
+    width: 32%;
+    padding: 0px;
+}
+#regpassword {
+    margin-left: 2%;
+    width: 32%;
+    padding: 0px;
+}
+#confregpassword {
+    margin-left: 2%;
+    width: 32%;
+    padding: 0px;
+}
+#regtextcontainer {
+    display: flex;
+    width: 100%;
+}
+input::placeholder {
+    text-align: center;
+}
+.hidden {
+    opacity: 0;
+    z-index: -1;
+}
