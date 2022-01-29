@@ -9,6 +9,7 @@ import io.dropwizard.views.ViewBundle;
 import skenav.core.db.Database;
 import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import skenav.core.security.Crypto;
 import skenav.core.security.ServletRequestFilter;
 
 import javax.servlet.DispatcherType;
@@ -19,6 +20,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
     public static void main(String[] args) throws Exception {
         new SkenavApplication().run(args);
         // test code
+        String testPassword = "password";
+        String hashedpw = Crypto.hashPassword(testPassword);
+        System.out.println(hashedpw);
 
     }
 
@@ -26,12 +30,15 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         File uploadDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator());
         File dbFile = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "database.mv.db");
         File hlsDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "hlstestfolder");
+
         if (!uploadDirectory.exists()) {
             final boolean mkdirs = uploadDirectory.mkdirs();
             System.out.println("----" + mkdirs);
         }
         if (!dbFile.exists()) {
             Database.createTable();
+            //TODO: Check if crypto seed specifically exists
+            Crypto.setCryptoSeed();
         }
         if (!hlsDirectory.exists()) {
             final boolean mkdirs = hlsDirectory.mkdirs();
@@ -65,6 +72,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         final QueryResources queryResources = new QueryResources(database);
         final VideoResources videoResources = new VideoResources(configuration.getUploadDirectory());
         final LoginResources loginResources = new LoginResources();
+        final RegisterResources registerResources = new RegisterResources();
         // TEST METHODS
         //queryResources.viewFilesToJSON();
 
@@ -75,6 +83,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
         environment.jersey().register(fileMgrResources);
         environment.jersey().register(videoResources);
         environment.jersey().register(loginResources);
+        environment.jersey().register(registerResources);
         environment.servlets().addFilter("custom filter name", new ServletRequestFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
 

@@ -41,6 +41,7 @@ public class Database {
             Statement statement = con.createStatement();
             statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
             statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(255))");
+            statement.executeUpdate("CREATE TABLE users (username varchar(255), password_hash varchar(255), authorization varchar(255), cookie_info varchar (255), account_creation_date  varchar (255), invited_by varchar(255), invite_date varchar(255), invite_accept_date varchar(255))");
             statement.close();
             con.close();
         }
@@ -116,5 +117,41 @@ public class Database {
             System.out.println(e.getMessage());
         }
         return fileinfo;
+    }
+    public void addToAppData (String key, String value) {
+        try {
+            PreparedStatement statement = con.prepareStatement("INSERT INTO APPDATA (KEY, VALUE) VALUES (?, ?)");
+            statement.setString(1, key);
+            statement.setString(2, value);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void addUser (String username, String passwordhash) {
+        try {
+            PreparedStatement statement = con.prepareStatement("INSERT INTO USERS (USERNAME, PASSWORD_HASH) VALUES (?, ?)");
+            statement.setString(1, username);
+            statement.setString(2, passwordhash);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public String getAppData(String key) {
+        String value = new String();
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT VALUE FROM APPDATA WHERE KEY = ?");
+            statement.setString(1, key);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                value = rs.getString("value");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return value;
     }
 }
