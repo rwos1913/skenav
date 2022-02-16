@@ -129,11 +129,13 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-    public void addUser (String username, String passwordhash) {
+    // permissions: 0 = owner 1 = admin 2= normal user
+    public void addUser (String username, String passwordhash, int authorization) {
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO USERS (USERNAME, PASSWORD_HASH) VALUES (?, ?)");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO USERS (USERNAME, PASSWORD_HASH, AUTHORIZATION) VALUES (?, ?, ?)");
             statement.setString(1, username);
             statement.setString(2, passwordhash);
+            statement.setInt(3, authorization);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e) {

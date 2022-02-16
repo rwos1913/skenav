@@ -57,7 +57,7 @@ public class VideoEncoder{
         }
     }
     public void encodeHevc(String filename, String pathtovideo, String hlsfilename, String uploaddirectory){
-        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathtovideo, "-c:v", "copy", "-start_number", "0", "-tag:v", "hvc1", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", uploaddirectory +"usercontent" + OS.pathSeparator() + "hlstestfolder" + OS.pathSeparator() + hlsfilename);
+        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathtovideo, "-c:v", "copy", "-start_number", "0", "-tag:v", "hvc1", "-hls_time", "10", "-hls_list_size", "0", "-hls_segment_type", "fmp4", "-hls_segment_filename", uploaddirectory + "usercontent" + OS.pathSeparator() + "hlstestfolder"+ OS.pathSeparator() + "fileSequence%d.m4s", "-f", "hls", uploaddirectory +"usercontent" + OS.pathSeparator() + "hlstestfolder" + OS.pathSeparator() + hlsfilename);
         try {
             pb.inheritIO().start().waitFor();
         } catch (InterruptedException | IOException e) {

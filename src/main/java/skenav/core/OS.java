@@ -24,7 +24,7 @@ public class OS {
     public static String getHomeDirectory() {
         return System.getProperty("user.home") + pathSeparator();
     }
-
+//TODO: make getusercontentdirectory get the user specified content directory instead of the hardcoded one
     public static String getUserContentDirectory() {
         String output = getHomeDirectory() + "usercontent" + pathSeparator();
         return output;
