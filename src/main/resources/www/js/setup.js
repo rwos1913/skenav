@@ -1,10 +1,6 @@
 window.onload = async function requestdefdirectory() {
 	listenForSubmit();
 	console.log("test");
-	let response = await fetch("/setup/defuploaddir");
-	let defaultuploaddirectory = await response.text();
-	let textbox = document.getElementById("uploaddirectory");
-	textbox.value = defaultuploaddirectory;
 }
 
 function listenForSubmit() {

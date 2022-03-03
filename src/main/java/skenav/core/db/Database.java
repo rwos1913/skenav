@@ -34,10 +34,10 @@ public class Database {
 
     }
 // creates db file and table. Called staticly from the application class if db does not already exist
-    public static void createTable() {
+    public static void createTable(String databasedirectory) {
         try {
             Class.forName("org.h2.Driver");
-            Connection con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
+            Connection con = DriverManager.getConnection("jdbc:h2:" + databasedirectory + "database");
             Statement statement = con.createStatement();
             statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
             statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(255))");

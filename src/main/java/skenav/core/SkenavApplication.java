@@ -14,32 +14,42 @@ import skenav.core.security.ServletRequestFilter;
 
 import javax.servlet.DispatcherType;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.EnumSet;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
 	public static void main(String[] args) throws Exception {
 		new SkenavApplication().run(args);
 		// test code
-		String testPassword = "password";
-		String hashedpw = Crypto.hashPassword(testPassword);
-		System.out.println(hashedpw);
-
+		if (Setup.checkBreadcrumb() == true) {
+			Database database = new Database();
+			//TODO: deserialize breadcrumb
+			String uploaddirectory = database.getAppData("upload directory");
+			Setup.finalizeSetup(uploaddirectory, false, null,null);
+		}
 	}
 
-	private void environment_setup(SkenavConfiguration config, Environment environment) {
-		File uploadDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator());
-		File dbFile = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "database.mv.db");
+	private void environment_setup(SkenavConfiguration config, Environment environment) throws URISyntaxException, IOException {
+
+		/*Database database = new Database();
+		String uploaddirectory = database.getAppData("upload directory");
+		System.out.println(uploaddirectory);
+		File uploadDirectory = new File(uploaddirectory);
+		File dbFile = new File(uploaddirectory + "database.mv.db");
 		File hlsDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "hlstestfolder");
 
 		if (!uploadDirectory.exists()) {
 			final boolean mkdirs = uploadDirectory.mkdirs();
 			System.out.println("----" + mkdirs);
+			java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
 		}
 		if (!dbFile.exists()) {
 			Database.createTable();
 			//TODO: Check if crypto seed specifically exists
 			Crypto.setCryptoSeed();
-			//java.awt.Desktop.getDesktop().browse();
+
 		}
 		if (!hlsDirectory.exists()) {
 			final boolean mkdirs = hlsDirectory.mkdirs();
@@ -47,7 +57,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		}
 		// creates thread pool
 	   // ThreadManagement threadManagement = new ThreadManagement();
-		//.threadManagement.createThreadPool();
+		//.threadManagement.createThreadPool(); */
 	}
 
 	@Override
@@ -62,7 +72,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 
 
 	@Override
-	public void run(SkenavConfiguration configuration, Environment environment) {
+	public void run(SkenavConfiguration configuration, Environment environment) throws URISyntaxException, IOException {
 		environment_setup(configuration,environment);
 		Database database = new Database();
 
