@@ -1,6 +1,7 @@
 package skenav.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.dropwizard.setup.Bootstrap;
 import skenav.core.db.Database;
 import skenav.core.security.Crypto;
 
@@ -12,24 +13,21 @@ import java.net.URISyntaxException;
 public class Setup {
 	static String breadcrumbdirectory = OS.getHomeDirectory() + "skenav-breadcrumb-do-not-delete.json";
 	static File breadcrumb = new File(breadcrumbdirectory);
+	String skenavdirectory;
+	public Setup() {
+		skenavdirectory = OS.getUserContentDirectory();
+	}
 	public static boolean checkBreadcrumb(){
 		//File breadcrumb = new File(breadcrumbdirectory);
-		if (!breadcrumb.exists()){
-			try {
-				java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-			return false;
+		if (breadcrumb.exists()){
+			return true;
 		}
 		else{
-			return true;
+			return false;
 		}
 	}
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
-	public static void finalizeSetup(String skenavdirectory, boolean firsttime, String username, String passwordhash) {
+	public void finalizeSetup(boolean firsttime, String username, String passwordhash) {
 		File skenavDirectory = new File(skenavdirectory);
 		File dbFile = new File(skenavdirectory + "database.mv.db");
 		File hlsDirectory = new File(skenavdirectory + "hlstestfolder");
@@ -37,12 +35,12 @@ public class Setup {
 		if (!skenavDirectory.exists()) {
 			final boolean mkdirs = skenavDirectory.mkdirs();
 			System.out.println(mkdirs);
+
 		}
 		if (!dbFile.exists()) {
-			Database.createTable(skenavdirectory);
+			Database.createTable();
 			Database database = new Database();
 			if (firsttime == true){
-				database.addToAppData("upload directory", skenavdirectory);
 				database.addUser(username,passwordhash,0);
 				Crypto.setCryptoSeed();
 			}
@@ -60,7 +58,7 @@ public class Setup {
 		}
 
 	}
-	public static void writeBreadcrumb(String uploaddirectory) throws IOException {
+	public void writeBreadcrumb(String uploaddirectory) throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.writeValue(new File(breadcrumbdirectory), uploaddirectory);
 	}

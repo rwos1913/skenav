@@ -1,6 +1,7 @@
 package skenav.core.resources;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import skenav.core.Cache;
 import skenav.core.OS;
 import skenav.core.Setup;
 import skenav.core.db.Database;
@@ -44,7 +45,10 @@ public class SetupResources {
         }
         //TODO: if passwords do not match show message on front end
         String hashedpassword = Crypto.hashPassword(password);
-        Setup.finalizeSetup(uploaddirectory, true, username, hashedpassword);
+        Cache cache = Cache.INSTANCE;
+        cache.setUploaddirectory(uploaddirectory);
+        Setup setup = new Setup();
+        setup.finalizeSetup(true, username, hashedpassword);
         /*Database database = new Database();
         Database.createTable(uploaddirectory);
         database.addUser(username,hashedpassword,0);

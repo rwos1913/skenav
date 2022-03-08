@@ -23,12 +23,21 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 	public static void main(String[] args) throws Exception {
 		new SkenavApplication().run(args);
 		// test code
-		if (Setup.checkBreadcrumb() == true) {
-			Database database = new Database();
-			//TODO: deserialize breadcrumb
-			String uploaddirectory = database.getAppData("upload directory");
-			Setup.finalizeSetup(uploaddirectory, false, null,null);
+		if (!Setup.checkBreadcrumb()) {
+			try {
+				java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+
 		}
+		else {
+			Setup setup = new Setup();
+			setup.finalizeSetup(false, null,null);
+		}
+
 	}
 
 	private void environment_setup(SkenavConfiguration config, Environment environment) throws URISyntaxException, IOException {
@@ -62,10 +71,17 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 
 	@Override
 	public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
-	   bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
-			.put("/www", "/static")
-			   .put(OS.getUserContentDirectory(), "/files")
-			.build()));
+		if (Setup.checkBreadcrumb()) {
+			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
+					.put("/www", "/static")
+					.put(OS.getUserContentDirectory(), "/files")
+					.build()));
+		}
+		else {
+			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
+					.put("/www", "/static")
+					.build()));
+		}
 		bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
 	}

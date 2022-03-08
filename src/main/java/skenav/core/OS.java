@@ -26,7 +26,7 @@ public class OS {
     }
 //TODO: make getusercontentdirectory get the user specified content directory instead of the hardcoded one
     public static String getUserContentDirectory() {
-        String output = getHomeDirectory() + "usercontent" + pathSeparator();
+        String output = Cache.INSTANCE.getUploaddirectory();
         return output;
     }
 
