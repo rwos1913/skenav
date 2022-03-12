@@ -43,8 +43,33 @@
     height: 90%;
 }
 #filedisplaybox {
-    overflow-y: scroll;
+    overflow: scroll;
     height: 95%;
+    position: relative;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#filedisplaybox::-webkit-scrollbar {
+    display: none;
+}
+#filetable {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#videoplayer {
+    height: inherit;
+    width: 100%;
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: black;
+}
+#video {
+    height: 100%;
+    width: 100%
 
 }
 #upperbar {
@@ -89,9 +114,6 @@
 }
 #filterbutton:hover {
     border-radius: 0px 10px 0px 0px;
-}
-#filetable {
-    width: 100%;
 }
 #filenamecolumn {
     width: 50%;

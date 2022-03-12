@@ -20,7 +20,7 @@ function getSearchString() {
     searchvalue = document.getElementById("search");
     search = searchvalue.value;
     console.log(search);
-    let url = "/query?limit=100&search=" + search + "&sort" + sort;
+    let url = "/query?limit=100&search=" + search + "&sort=" + sort;
     getJson(url, callback);
 
 }
@@ -57,7 +57,7 @@ function callback (err, data) {
 }
 
 function parseJson (data) {
-    clearTable("tablebody");
+    clearTable();
     for (let i = 0; i < data.length; i++) {
         var currentrow = data[i];
         var filename = currentrow[0];
@@ -77,6 +77,7 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     else {
         tr.className = "oddtablerow";
     }
+    tr.onclick = function() {requestVideo(filename)};
     var td0 = tr.insertCell(0);
     td0.textContent = filename;
     var td1 = tr.insertCell(1);
@@ -88,7 +89,46 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     td2.textContent = uploaddate;
     table.appendChild(tr);
 }
-
+function requestVideo(filename) {
+    console.log(filename);
+    var videoUrl = "/video?name=" + filename;
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.onload = () => {
+        let data = xhr.response;
+        playVideo(data);
+    }
+    xhr.open( "GET", videoUrl, true);
+    xhr.send(null);
+}
+function playVideo(playlistname) {
+    var videodiv = document.createElement("div");
+    var video = document.createElement("video")
+    videodiv.id = "videoplayer";
+    video.id = "video";
+    video.controls = true;
+    video.autoplay = true;
+    videodiv.appendChild(video);
+    if (Hls.isSupported()) {
+        console.log('hello hls.js');
+        //var video = document.getElementById('video');
+        var hls = new Hls();
+        // bind them together
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            console.log('video and hls.js are now bound together');
+            hls.loadSource('/files/hlstestfolder/' + playlistname);
+            hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                hls.startLoad(0)
+                console.log(
+                    'manifest loaded, found' + data.levels.length + 'quality level'
+                );
+            });
+        });
+    }
+    clearTable();
+    document.getElementById("filedisplaybox").appendChild(videodiv);
+}
 function upload() {
     var fileupload = document.getElementById("file");
     fileupload.click();
@@ -104,8 +144,8 @@ function uploadprompt() {
     req.send(formData);
 }
 
-function clearTable (elementID) {
-    var div = document.getElementById(elementID);
+function clearTable () {
+    var div = document.getElementById("tablebody");
 
     while(div.firstChild) {
         div.removeChild(div.firstChild);

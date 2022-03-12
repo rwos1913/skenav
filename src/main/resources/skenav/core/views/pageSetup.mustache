@@ -1,0 +1,17 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <link href="/static/css/setup.css" rel="stylesheet">
+    <script type="application/javascript" src="/static/js/setup.js"></script>
+</head>
+<body>
+<p>Welcome to Skenav!</p>
+<form id="setupform" action="/setup/submitowner" method="post" enctype="multipart/form-data">
+	<input type="text" id="username" name="username" placeholder="username">
+	<input type="text" id="password" name="password" placeholder="password">
+	<input type="text" id="confpassword" name="confpassword" placeholder="confirm password">
+	<input type="text" id="uploaddirectory" name="uploaddirectory" value="{{uploaddirectory}}">
+	<input type="submit" id="submit" name="submit">
+</form>
+</body>
+</html>

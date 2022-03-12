@@ -1,0 +1,80 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <link href="/static/css/filemgr.css" rel="stylesheet">
+    <script type="application/javascript" src="/static/js/filemgr.js"></script>
+    <script type="application/javascript" src="/static/js/hls.js"></script>
+</head>
+<body>
+<form id="uploadform" action="/upload" method="POST" class="hidden" enctype="multipart/form-data">
+    <input type="file" id="file" onchange="uploadprompt()" name="file">
+    <input type="submit" id="submit" value="Submit">
+</form>
+<div>
+    <!-- page background div -->
+    <div id="filemgrlogocontainer">
+        <!-- logo -->
+        <img id="filemgrlogo" src="/static/image/logo.svg">
+    </div>
+    <div id="pageselectbuttoncontainer">
+        <!-- container for file manager and media suite buttons -->
+        <div id="filemgrbutton" class="button">
+            <p class="buttontext">File Manager</p>
+            <!-- file manager button -->
+        </div>
+        <!--<div id="filemgrunderline"> -->
+        <!-- file manager button underline -->
+        <div id="mediasuitebutton" class="button">
+            <!-- unselected media suite button -->
+            <p class="buttontext">Media Suite</p>
+        </div>
+    </div>
+    <div id="superbox">
+        <!-- super box around file manager -->
+        <div id="upperbar">
+            <!-- upper bar that houses search bar -->
+            <div onclick="upload()"  id="uploadbutton" class="fmboxbutton">
+                <!-- upload button -->
+                <p class="fmbuttontext">Upload File</p>
+            </div>
+            <div id="searchbox">
+                <input type="search" id="search" onInput="getSearchString()" name="search" placeholder="search">
+            </div>
+            <div id="filterbutton" class="fmboxbutton">
+                <!-- view button -->
+                <p class="fmbuttontext">View</p>
+            </div>
+                <!--<input type="search" id="search" onInput="getSearchString()" name="search"> -->
+        </div>
+        <div id="filedisplaybox">
+            <!-- sub box in which the actual files are displayed-->
+            <table id="filetable">
+                <colgroup>
+                    <col id="filenamecolumn">
+                    <col id="filetypecolumn">
+                    <col id="uploaddatecolumn">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th onclick="fileNameSort()">File Name</th>
+                    <th>File Type</th>
+                    <th onclick="uploadDateSort()">Upload Date</th>
+                </tr>
+                </thead>
+                <tbody id="tablebody"></tbody>
+            </table>
+            <!--<div id="videoplayer">
+                <p>this is a test</p>
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--<form enctype="multipart/form-data" method="POST" id="uploadForm" action="/upload">
+    <input type="file" onchange="uploadprompt()" id="FileUpload1" />
+    <input type="hidden" id="fileName" name="fileName" />
+    <input type="submit" id="submitButton" value="Upload" />
+</form>-->
+
+
+</body>
+</html>

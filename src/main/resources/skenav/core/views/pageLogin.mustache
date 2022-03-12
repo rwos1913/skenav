@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/login.css" rel="stylesheet">
+    <script src="/static/js/login.js"></script>
+</head>
+<body onload="setup()">
+<div id="container">
+    <!-- main div -->
+    <div>
+        <img id="logo" src="/static/image/logo.svg">
+    </div>
+    <div id="loginbox">
+        <form id="loginform" action="/login" method="post">
+            <input type="text" id="username" class="logininput" name="username" placeholder="username">
+            <input type="password" id="password" class="logininput" name="password" placeholder="password"><br>
+            <div id="remembermecontainer">
+                <label for="rememberme"> Remember me</label>
+                <input type="checkbox" id="rememberme" name="rememberme" value="rememberme">
+            </div>
+            <input type="submit" value="login" id="loginbutton">
+            <input type="button" value="register" id="toregisterbutton" onclick="switchToRegister()">
+        </form>
+        <form id="registerform" action="/register" method="post">
+            <div id="regtextcontainer">
+                <input type="text" id="regusername" name="regusername" placeholder="username" class="logininput">
+                <input type="password" id="regpassword" class="logininput" name="regpassword" placeholder="password">
+                <input type="password" id="confregpassword" class="logininput" name="confregpassword" placeholder="confirm password"><br>
+            </div>
+            <input type="text" id="invitecode" class="logininput" name="invitecode" placeholder="invite code">
+            <input type="button" value="back to sign in" id="tosigninbutton" onclick="switchToLogin()">
+            <input type="submit" value="register" id="registerbutton">
+        </form>
+    </div>
+</div>
+</body>
+</html>
