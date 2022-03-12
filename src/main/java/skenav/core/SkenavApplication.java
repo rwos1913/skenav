@@ -72,6 +72,12 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 	@Override
 	public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
 		if (Setup.checkBreadcrumb()) {
+			Setup setup = new Setup();
+			try {
+				setup.readBreadcrumb();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
 					.put("/www", "/static")
 					.put(OS.getUserContentDirectory(), "/files")

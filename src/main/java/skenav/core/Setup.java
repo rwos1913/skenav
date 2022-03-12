@@ -9,23 +9,27 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Map;
 
 public class Setup {
 	static String breadcrumbdirectory = OS.getHomeDirectory() + "skenav-breadcrumb-do-not-delete.json";
 	static File breadcrumb = new File(breadcrumbdirectory);
 	String skenavdirectory;
+
 	public Setup() {
 		skenavdirectory = OS.getUserContentDirectory();
 	}
-	public static boolean checkBreadcrumb(){
+
+	public static boolean checkBreadcrumb() {
 		//File breadcrumb = new File(breadcrumbdirectory);
-		if (breadcrumb.exists()){
+		if (breadcrumb.exists()) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
+
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
 	public void finalizeSetup(boolean firsttime, String username, String passwordhash) {
 		File skenavDirectory = new File(skenavdirectory);
@@ -40,8 +44,8 @@ public class Setup {
 		if (!dbFile.exists()) {
 			Database.createTable();
 			Database database = new Database();
-			if (firsttime == true){
-				database.addUser(username,passwordhash,0);
+			if (firsttime == true) {
+				database.addUser(username, passwordhash, 0);
 				Crypto.setCryptoSeed();
 			}
 		}
@@ -58,13 +62,35 @@ public class Setup {
 		}
 
 	}
+
 	public void writeBreadcrumb(String uploaddirectory) throws IOException {
+		Json json = new Json();
+		json.setUploaddirectory(uploaddirectory);
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.writeValue(new File(breadcrumbdirectory), uploaddirectory);
+		objectMapper.writeValue(new File(breadcrumbdirectory), json);
 	}
 
+	public void readBreadcrumb() throws IOException {
+		String uploaddirectory;
+		ObjectMapper mapper = new ObjectMapper();
+		Json json = mapper.readValue(new File(breadcrumbdirectory), Json.class);
+		uploaddirectory = json.getUploaddirectory();
+		Cache.INSTANCE.setUploaddirectory(uploaddirectory);
 
+	}
 }
+class Json {
+	private String uploaddirectory;
+
+	public void setUploaddirectory (String uploaddirectory) {
+		this.uploaddirectory = uploaddirectory;
+	}
+
+	public String getUploaddirectory() {
+		return uploaddirectory;
+	}
+}
+
 
 	/*Database database = new Database();
 	String uploaddirectory = database.getAppData("upload directory");
