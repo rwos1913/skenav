@@ -66,6 +66,19 @@ public class Crypto {
         return hashedCryptoSeed.substring(0, 5);
     }
 
+    public static boolean checkPassword(String username, String inputpassword) {
+        String hashedinputpassword = hashPassword(inputpassword);
+        Database database = new Database();
+        String referencehashedpassword = database.getPasswordHash(username);
+        if (inputpassword.equals(referencehashedpassword)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     public static String sha3(String input) {
         final SHA3.DigestSHA3 sha3 = new SHA3.Digest512();
         sha3.update(input.getBytes(StandardCharsets.UTF_8));

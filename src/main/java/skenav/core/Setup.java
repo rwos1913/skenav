@@ -31,7 +31,7 @@ public class Setup {
 	}
 
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
-	public void finalizeSetup(boolean firsttime, String username, String passwordhash) {
+	public void finalizeSetup(boolean firsttime, String username, String password) {
 		File skenavDirectory = new File(skenavdirectory);
 		File dbFile = new File(skenavdirectory + "database.mv.db");
 		File hlsDirectory = new File(skenavdirectory + "hlstestfolder");
@@ -43,10 +43,12 @@ public class Setup {
 		}
 		if (!dbFile.exists()) {
 			Database.createTable();
+			System.out.println("table created");
 			Database database = new Database();
 			if (firsttime == true) {
-				database.addUser(username, passwordhash, 0);
 				Crypto.setCryptoSeed();
+				String passwordhash = Crypto.hashPassword(password);
+				database.addUser(username, passwordhash, 0);
 			}
 		}
 		if (!hlsDirectory.exists()) {

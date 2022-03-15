@@ -44,11 +44,10 @@ public class SetupResources {
             throw new WebApplicationException("passwords do not match", 400);
         }
         //TODO: if passwords do not match show message on front end
-        String hashedpassword = Crypto.hashPassword(password);
         Cache cache = Cache.INSTANCE;
         cache.setUploaddirectory(uploaddirectory);
         Setup setup = new Setup();
-        setup.finalizeSetup(true, username, hashedpassword);
+        setup.finalizeSetup(true, username, password);
         /*Database database = new Database();
         Database.createTable(uploaddirectory);
         database.addUser(username,hashedpassword,0);

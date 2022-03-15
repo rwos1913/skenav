@@ -156,4 +156,18 @@ public class Database {
         }
         return value;
     }
+    public String getPasswordHash(String username) {
+        String hashedpassword = new String();
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT PASSWORD_HASH FROM USERS WHERE USERNAME = ?");
+            statement.setString(1, username);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                hashedpassword = rs.getString("password_hash");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return hashedpassword;
+    }
 }
