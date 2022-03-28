@@ -1,7 +1,12 @@
 package skenav.core.security;
 
+import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.generators.SCrypt;
+import org.bouncycastle.crypto.modes.GCMBlockCipher;
+import org.bouncycastle.crypto.params.AEADParameters;
+import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
+import skenav.core.Cache;
 import skenav.core.db.Database;
 
 import javax.ws.rs.WebApplicationException;
@@ -10,8 +15,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import static java.security.CryptoPrimitive.SECURE_RANDOM;
+
 public class Crypto {
     private static String cryptoSeed;
+    private static final int aeskeysize = 256;
+    private static final int noncebitsize = 128;
+    private static final int ivsize = noncebitsize / 8;
+    private static final int macbitsize = 128;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     public static void setCryptoSeed() {
         String seed = randomAlphaNum(10);
@@ -28,6 +40,9 @@ public class Crypto {
     }
     public static String base64Encode(byte[] input) {
         return Base64.getEncoder().encodeToString(input);
+    }
+    public static byte[] base64Decode(String input) {
+        return Base64.getDecoder().decode(input);
     }
     //generate random chars from an array
     private static String randomChars(int length, char[] charsArray) {
@@ -57,7 +72,7 @@ public class Crypto {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        byte[] sCryptHash = SCrypt.generate(saltedBytes.toByteArray(), cryptoSeed.getBytes(), 16384, 8, 8, 32);
+        byte[] sCryptHash = SCrypt.generate(saltedBytes.toByteArray(), getCryptoSeed().getBytes(), 16384, 8, 8, 32);
         return base64Encode(sCryptHash);
     }
 
@@ -70,7 +85,7 @@ public class Crypto {
         String hashedinputpassword = hashPassword(inputpassword);
         Database database = new Database();
         String referencehashedpassword = database.getPasswordHash(username);
-        if (inputpassword.equals(referencehashedpassword)) {
+        if (hashedinputpassword.equals(referencehashedpassword)) {
             return true;
         }
         else {
@@ -87,5 +102,38 @@ public class Crypto {
             buff.append(String.format("%02x", b & 0xFF));
         }
         return buff.toString();
+    }
+
+    public static String encrypt(String plaintext, byte[] key){
+        byte[] plaintextbytes = plaintext.getBytes(StandardCharsets.UTF_8);
+        byte[] iv = newIV();
+        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        AEADParameters parameters = new AEADParameters(new KeyParameter(key), macbitsize, iv, null);
+        System.out.println("cookie key after used in encrypt method is: " + Cache.INSTANCE.getCookieKey());
+        cipher.init(true, parameters);
+        byte[] encryptedbytes = new byte[cipher.getOutputSize(plaintextbytes.length)];
+        int returnlength = cipher.processBytes(plaintextbytes, 0, plaintextbytes.length, encryptedbytes, 0);
+        try{
+            cipher.doFinal(encryptedbytes, returnlength);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        byte[] outputbytes = new byte[encryptedbytes.length + iv.length];
+        System.arraycopy(encryptedbytes, 0, outputbytes, 0, encryptedbytes.length);
+        System.arraycopy(iv, 0, outputbytes, encryptedbytes.length, iv.length);
+        return base64Encode(outputbytes);
+    }
+    public byte[] newKey() {
+        String hash = sha3(getCryptoSeed());
+        byte[] salt = getSalt().getBytes(StandardCharsets.UTF_8);
+        byte[] hashbytes = hash.getBytes(StandardCharsets.UTF_8);
+        byte[] hashedkey = SCrypt.generate(hashbytes, salt,16384, 8, 8, aeskeysize);
+        return hashedkey;
+    }
+
+    public static byte[] newIV() {
+        byte[] iv = new byte[ivsize];
+        SECURE_RANDOM.nextBytes(iv);
+        return iv;
     }
 }

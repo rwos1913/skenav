@@ -47,6 +47,12 @@ public class Setup {
 			Database database = new Database();
 			if (firsttime == true) {
 				Crypto.setCryptoSeed();
+				Crypto crypto = new Crypto();
+				byte[] key = crypto.newKey();
+				String base64key = Crypto.base64Encode(key);
+				System.out.println("key right after generation is: " + key);
+				System.out.println(("base64 key immediately after encoding is" + base64key));
+				database.addToAppData("cookie key", base64key);
 				String passwordhash = Crypto.hashPassword(password);
 				database.addUser(username, passwordhash, 0);
 			}

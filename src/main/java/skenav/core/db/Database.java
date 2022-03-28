@@ -40,7 +40,7 @@ public class Database {
             Connection con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
             Statement statement = con.createStatement();
             statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
-            statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(255))");
+            statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(max))");
             statement.executeUpdate("CREATE TABLE users (username varchar(255), password_hash varchar(255), authorization varchar(255), cookie_info varchar (255), account_creation_date  varchar (255), invited_by varchar(255), invite_date varchar(255), invite_accept_date varchar(255))");
             statement.close();
             con.close();
@@ -156,6 +156,8 @@ public class Database {
         }
         return value;
     }
+
+
     public String getPasswordHash(String username) {
         String hashedpassword = new String();
         try {
@@ -169,5 +171,22 @@ public class Database {
             throwables.printStackTrace();
         }
         return hashedpassword;
+    }
+
+    // 0 is owner 1 is admin 2 is normal user
+    // TODO: make method for getting both password and authorization
+    public Integer getAuthzLevel(String username) {
+        Integer authzlevel = null;
+        try{
+            PreparedStatement statement = con.prepareStatement("SELECT AUTHORIZATION from USERS WHERE USERNAME = ?");
+            statement.setString(1, username);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                authzlevel = rs.getInt("authorization");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return authzlevel;
     }
 }
