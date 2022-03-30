@@ -127,7 +127,7 @@ public class Crypto {
         String hash = sha3(getCryptoSeed());
         byte[] salt = getSalt().getBytes(StandardCharsets.UTF_8);
         byte[] hashbytes = hash.getBytes(StandardCharsets.UTF_8);
-        byte[] hashedkey = SCrypt.generate(hashbytes, salt,16384, 8, 8, aeskeysize);
+        byte[] hashedkey = SCrypt.generate(hashbytes, salt,16384, 8, 8, getAesKeySizeBytes());
         return hashedkey;
     }
 
@@ -135,5 +135,8 @@ public class Crypto {
         byte[] iv = new byte[ivsize];
         SECURE_RANDOM.nextBytes(iv);
         return iv;
+    }
+    public static int getAesKeySizeBytes() {
+        return aeskeysize / 8;
     }
 }

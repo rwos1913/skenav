@@ -12,6 +12,7 @@ import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import skenav.core.security.Crypto;
 import skenav.core.security.ServletRequestFilter;
 
+import javax.crypto.Cipher;
 import javax.servlet.DispatcherType;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		String uploaddirectory = database.getAppData("upload directory");
 		System.out.println(uploaddirectory);
 		File uploadDirectory = new File(uploaddirectory);
-		File dbFile = new File(uploaddirectory + "database.mv.db");
+		File dbFile = new File(uploaddirectory + "database.mv.db");=
 		File hlsDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "hlstestfolder");
 
 		if (!uploadDirectory.exists()) {
