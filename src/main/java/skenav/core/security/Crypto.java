@@ -13,6 +13,7 @@ import javax.ws.rs.WebApplicationException;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 
 import static java.security.CryptoPrimitive.SECURE_RANDOM;
@@ -123,6 +124,25 @@ public class Crypto {
         System.arraycopy(iv, 0, outputbytes, encryptedbytes.length, iv.length);
         return base64Encode(outputbytes);
     }
+
+    public static String decrypt(String cipherText, byte[] key) {
+        byte[] cipherTextBytes = base64Decode(cipherText);
+        byte[] iv = Arrays.copyOfRange(cipherTextBytes, (cipherTextBytes.length - ivsize), cipherTextBytes.length);
+        byte[] encryptedBytes = Arrays.copyOfRange(cipherTextBytes, 0, (cipherTextBytes.length - ivsize));
+        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        AEADParameters parameters = new AEADParameters(new KeyParameter(key), macbitsize, iv, null);
+        cipher.init(false, parameters);
+        byte[] plainTextBytes = new byte[cipher.getOutputSize(encryptedBytes.length)];
+        int returnLength = cipher.processBytes(encryptedBytes, 0, encryptedBytes.length, plainTextBytes, 0);
+        try {
+            cipher.doFinal(plainTextBytes, returnLength);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return new String(plainTextBytes, StandardCharsets.UTF_8);
+    }
+
     public byte[] newKey() {
         String hash = sha3(getCryptoSeed());
         byte[] salt = getSalt().getBytes(StandardCharsets.UTF_8);
