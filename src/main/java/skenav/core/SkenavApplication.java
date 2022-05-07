@@ -9,12 +9,11 @@ import io.dropwizard.views.ViewBundle;
 import skenav.core.db.Database;
 import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+//import skenav.core.security.AuthFilter;
+import skenav.core.security.AuthFilter;
 import skenav.core.security.Crypto;
-import skenav.core.security.ServletRequestFilter;
 
-import javax.crypto.Cipher;
 import javax.servlet.DispatcherType;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -98,10 +97,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 	public void run(SkenavConfiguration configuration, Environment environment) throws URISyntaxException, IOException {
 		environment_setup(configuration,environment);
 		Database database = new Database();
+		Crypto crypto = new Crypto();
 
 		final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database, configuration.getHashFilename());
-		final HomeResources homeResources = new HomeResources();
-		//final HomeResources homeResources = new HomeResources(database);
 		final FileMgrResources fileMgrResources = new FileMgrResources();
 		final QueryResources queryResources = new QueryResources(database);
 		final VideoResources videoResources = new VideoResources(configuration.getUploadDirectory());
@@ -114,13 +112,13 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		environment.jersey().register(queryResources);
 		environment.jersey().register(MultiPartBundle.class);
 		environment.jersey().register(uploadResources);
-		environment.jersey().register(homeResources);
 		environment.jersey().register(fileMgrResources);
 		environment.jersey().register(videoResources);
 		environment.jersey().register(loginResources);
 		environment.jersey().register(registerResources);
 		environment.jersey().register(setupResources);
-		environment.servlets().addFilter("custom filter name", new ServletRequestFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+		environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+		//environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
 
 	}

@@ -25,7 +25,7 @@ function switchToLogin() {
 function submitForm(event) {
     console.log("form submit method triggered");
     if (event.target.id === "loginform") {
-        var url = "/login"
+        var url = "/login/submitlogin"
     }
     else if (event.target.id === "registerform") {
         var url = "/register"
