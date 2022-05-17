@@ -1,19 +1,27 @@
 package skenav.core.resources;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
+import skenav.core.Cache;
 import skenav.core.OS;
 import skenav.core.db.Database;
+import skenav.core.security.Crypto;
+import skenav.core.security.UserManagement;
 
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)
@@ -38,10 +46,12 @@ public class UploadResources {
             //gets inputstream from html form
             @FormDataParam("file") final InputStream fileInputStream,
             //gets content disposition from html form
-            @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
+            @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader,
+            @CookieParam("SkenavAuth") final Cookie cookie) throws IOException {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
+        String user = parseCookieForUserName(cookie);
         System.out.println("file name from content dispo header is:" + filename);
         String filestring;
         //boolean b1 = Boolean.parseBoolean(hashFilename);
@@ -56,7 +66,7 @@ public class UploadResources {
         String uploadedFileLocation = uploadDirectory + "usercontent" + OS.pathSeparator() + filestring;
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
-        database.addFile(filehash, filename, filetype, datetime);
+        database.addFile(filehash, filename, filetype, datetime, user);
         String output = "Upload successful!";
         System.out.println(output);
         return Response.ok(output).build();
@@ -115,6 +125,12 @@ public class UploadResources {
         else if (rft.equals("rtf")) {
             prettyfiletype = "RTF Document";
         }
+        else if (rft.equals("mp4")) {
+            prettyfiletype = "MP4 Video";
+        }
+        else if (rft.equals("mkv")) {
+            prettyfiletype = "MKV Video";
+        }
         else {
             prettyfiletype = "unknown extension: " + rawfiletype;
         }
@@ -131,6 +147,12 @@ public class UploadResources {
         SecureRandom random = new SecureRandom();
         String output = Hex.toHexString(digest);
         return output;
+    }
+
+    private String parseCookieForUserName(Cookie cookie) throws JsonProcessingException {
+        Map<String, String> cookiemap = UserManagement.cookieToMap(cookie);
+        String username = cookiemap.get("username");
+        return username;
     }
 
 }

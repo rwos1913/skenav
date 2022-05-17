@@ -11,6 +11,7 @@ import skenav.core.views.SetupView;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 //TODO: pass upload directory as html variable instead of request
 @Path("setup")
@@ -29,7 +30,6 @@ public class SetupResources {
     @POST
     @Path("submitowner")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-
     public Response registerAdmin (
             @FormDataParam("username") String username,
             @FormDataParam("password") String password,
@@ -48,6 +48,7 @@ public class SetupResources {
         cache.setUploaddirectory(uploaddirectory);
         Setup setup = new Setup();
         setup.finalizeSetup(true, username, password);
+        new File(OS.getUserContentDirectory() + username + "hlsfiles");
         /*Database database = new Database();
         Database.createTable(uploaddirectory);
         database.addUser(username,hashedpassword,0);

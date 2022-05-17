@@ -77,7 +77,7 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     else {
         tr.className = "oddtablerow";
     }
-    tr.onclick = function() {requestVideo(filename)};
+    tr.onclick = function() {determineMediaRequestType(filename, filetype)};
     var td0 = tr.insertCell(0);
     td0.textContent = filename;
     var td1 = tr.insertCell(1);
@@ -89,8 +89,14 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     td2.textContent = uploaddate;
     table.appendChild(tr);
 }
-function requestVideo(filename) {
+function determineMediaRequestType(filename, filetype) {
     console.log(filename);
+    if (filetype == "MKV Video" || filetype == "MP4 Video") {
+        sendVideoRequest(filename)
+    }
+
+}
+function sendVideoRequest(filename) {
     var videoUrl = "/video?name=" + filename;
     var xhr = new XMLHttpRequest();
     xhr.responseType = "json";

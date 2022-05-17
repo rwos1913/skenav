@@ -21,39 +21,37 @@ public class AuthFilter implements Filter {
 			String path = servletrequest.getRequestURI();
 			System.out.println("path from filter is" + path);
 			if (
-					path.equals("/login") || path.equals("/static/js/login.js") || path.equals("/static/css/login.css") || path.equals("/static/image/logo.svg") || path.equals("/login/submitlogin")
+					path.equals("/login") || path.equals("/static/js/login.js") || path.equals("/static/css/login.css") || path.equals("/static/image/logo.svg") || path.equals("/login/submitlogin") || path.equals("/setup") || path.equals("/setup/submitowner") || path.equals("/static/js/setup.js")
 			){
 				chain.doFilter(request, response);
 			}
 			else {
 				Cookie[] cookies;
 				cookies = servletrequest.getCookies();
-				System.out.println(cookies.length);
-				System.out.println(cookies);
 				String cookiename = "SkenavAuth";
 				String cookievalue = null;
 				if (cookies == null) {
 					servletresponse.sendRedirect("/login");
 				}
-				for (int i=0; i<cookies.length; i++) {
-					Cookie cookie = cookies[i];
-					if (cookiename.equals(cookie.getName())) {
-						cookievalue = cookie.getValue();
-						System.out.println("value is" + cookievalue);
-						break;
+				else {
+					for (int i = 0; i < cookies.length; i++) {
+						Cookie cookie = cookies[i];
+						if (cookiename.equals(cookie.getName())) {
+							cookievalue = cookie.getValue();
+							System.out.println("value is" + cookievalue);
+							break;
+						}
 					}
-				}
-				if (cookiename != null) {
-					if (checkAuthN(cookievalue) == true) {
-						chain.doFilter(request,response);
-						return;
-					}
-					else {
+					if (cookiename != null) {
+						if (checkAuthN(cookievalue) == true) {
+							chain.doFilter(request, response);
+							return;
+						} else {
+							servletresponse.sendRedirect("/login");
+						}
+					} else {
 						servletresponse.sendRedirect("/login");
 					}
-				}
-				else{
-					servletresponse.sendRedirect("/login");
 				}
 
 

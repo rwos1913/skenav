@@ -116,7 +116,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		environment.jersey().register(videoResources);
 		environment.jersey().register(loginResources);
 		environment.jersey().register(registerResources);
-		environment.jersey().register(setupResources);
+		if (!Setup.checkBreadcrumb()){
+			environment.jersey().register(setupResources);
+		}
 		environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
 		//environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 

@@ -39,7 +39,7 @@ public class Database {
             Class.forName("org.h2.Driver");
             Connection con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
             Statement statement = con.createStatement();
-            statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50))");
+            statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50), owner varchar(255), authorized_users varchar(255))");
             statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(max))");
             statement.executeUpdate("CREATE TABLE users (username varchar(255), password_hash varchar(255), authorization varchar(255), cookie_info varchar (255), account_creation_date  varchar (255), invited_by varchar(255), invite_date varchar(255), invite_accept_date varchar(255))");
             statement.close();
@@ -50,13 +50,15 @@ public class Database {
         }
     }
 // adds file to database when uploaded
-    public void addFile(String filehash, String filename, String filetype, String datetime) {
+    //TODO: add method for adding authorized user to a file
+    public void addFile(String filehash, String filename, String filetype, String datetime, String owner) {
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO table1 (file_id, file_name, file_type, upload_datetime) VALUES (?, ?, ?, ?) ");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO table1 (file_id, file_name, file_type, upload_datetime, owner) VALUES (?, ?, ?, ?, ?) ");
             statement.setString(1, filehash);
             statement.setString(2, filename);
             statement.setString(3, filetype);
             statement.setString(4, datetime);
+            statement.setString(5, owner);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e) {
