@@ -48,7 +48,7 @@ public class SetupResources {
         cache.setUploaddirectory(uploaddirectory);
         Setup setup = new Setup();
         setup.finalizeSetup(true, username, password);
-        new File(OS.getUserContentDirectory() + username + "hlsfiles");
+        Setup.addUserHlsDirectory(username);
         /*Database database = new Database();
         Database.createTable(uploaddirectory);
         database.addUser(username,hashedpassword,0);

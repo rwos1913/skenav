@@ -102,10 +102,11 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database, configuration.getHashFilename());
 		final FileMgrResources fileMgrResources = new FileMgrResources();
 		final QueryResources queryResources = new QueryResources(database);
-		final VideoResources videoResources = new VideoResources(configuration.getUploadDirectory());
+		final VideoResources videoResources = new VideoResources(database);
 		final LoginResources loginResources = new LoginResources();
 		final RegisterResources registerResources = new RegisterResources();
 		final SetupResources setupResources = new SetupResources();
+		final DownloadResources downloadResources = new DownloadResources();
 		// TEST METHODS
 		//queryResources.viewFilesToJSON();
 
@@ -116,6 +117,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		environment.jersey().register(videoResources);
 		environment.jersey().register(loginResources);
 		environment.jersey().register(registerResources);
+		environment.jersey().register(downloadResources);
 		if (!Setup.checkBreadcrumb()){
 			environment.jersey().register(setupResources);
 		}

@@ -94,7 +94,24 @@ function determineMediaRequestType(filename, filetype) {
     if (filetype == "MKV Video" || filetype == "MP4 Video") {
         sendVideoRequest(filename)
     }
-
+    else {
+        sendGenericFileRequest(filename);
+    }
+}
+function sendGenericFileRequest(filename){
+    var fileurl = "/download";
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = "arraybuffer";
+    xhr.onload = () => {
+        let data = xhr.response;
+        downloadFile(data);
+    }
+    xhr.open("GET", fileurl, true);
+    xhr.setRequestHeader("File-Name", filename);
+    xhr.send(null);
+}
+function downloadFile(data) {
+    data.download;
 }
 function sendVideoRequest(filename) {
     var videoUrl = "/video?name=" + filename;
@@ -107,9 +124,11 @@ function sendVideoRequest(filename) {
     xhr.open( "GET", videoUrl, true);
     xhr.send(null);
 }
-function playVideo(playlistname) {
+function playVideo(jsondata) {
     var videodiv = document.createElement("div");
-    var video = document.createElement("video")
+    var video = document.createElement("video");
+    var username = jsondata.username;
+    var playlistname = jsondata.hlsfilename;
     videodiv.id = "videoplayer";
     video.id = "video";
     video.controls = true;
@@ -123,7 +142,7 @@ function playVideo(playlistname) {
         hls.attachMedia(video);
         hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             console.log('video and hls.js are now bound together');
-            hls.loadSource('/files/hlstestfolder/' + playlistname);
+            hls.loadSource('/files/hls/' + username + "/" + playlistname);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                 hls.startLoad(0)
                 console.log(

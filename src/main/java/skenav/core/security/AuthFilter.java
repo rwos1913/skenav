@@ -1,5 +1,8 @@
 package skenav.core.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.http.HttpStatus;
 import skenav.core.Cache;
 
@@ -8,6 +11,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthFilter implements Filter {
 	//byte[] key = Cache.INSTANCE.getCookieKey();
@@ -24,6 +29,7 @@ public class AuthFilter implements Filter {
 					path.equals("/login") || path.equals("/static/js/login.js") || path.equals("/static/css/login.css") || path.equals("/static/image/logo.svg") || path.equals("/login/submitlogin") || path.equals("/setup") || path.equals("/setup/submitowner") || path.equals("/static/js/setup.js")
 			){
 				chain.doFilter(request, response);
+				return;
 			}
 			else {
 				Cookie[] cookies;
@@ -44,6 +50,18 @@ public class AuthFilter implements Filter {
 					}
 					if (cookiename != null) {
 						if (checkAuthN(cookievalue) == true) {
+							if (path.startsWith("/files/hls/")){
+								System.out.println("file path captured is " + path);
+								String username = StringUtils.substringBetween(path, "/files/hls/", "/");
+								System.out.println(username);
+								Map<String, String> cookiemap = deserializeServletCookie(cookievalue);
+								String cookieusername = cookiemap.get("username");
+								System.out.println("Username from filter cookies is " + cookieusername);
+								System.out.println("Username from file is " + username);
+								if (!username.equals(cookieusername)){
+									return;
+								}
+							}
 							chain.doFilter(request, response);
 							return;
 						} else {
@@ -63,8 +81,7 @@ public class AuthFilter implements Filter {
 	private boolean checkAuthN (String ciphertext) {
 		System.out.println("ct is" + ciphertext);
 		//System.out.println("key is" + key);
-		Crypto crypto = new Crypto();
-		byte[] key = crypto.newKey();
+		byte[] key = Cache.INSTANCE.getCookieKey();
 		String encodedkey = Crypto.base64Encode(key);
 		System.out.println("generated test key is" + encodedkey);
 		String plaintext = Crypto.decrypt(ciphertext, key);
@@ -76,5 +93,11 @@ public class AuthFilter implements Filter {
 			return false;
 		}
 	}
-
+	private Map<String, String> deserializeServletCookie (String cookievalue) throws JsonProcessingException {
+		byte[] key = Cache.INSTANCE.getCookieKey();
+		String decryptedjson = Crypto.decrypt(cookievalue, key);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, String> cookiemap = objectMapper.readValue(decryptedjson, HashMap.class);
+		return cookiemap;
+	}
 }

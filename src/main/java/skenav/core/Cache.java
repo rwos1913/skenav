@@ -10,6 +10,8 @@ public enum Cache {
 
 	private byte[] cookiekey;
 
+	private String owner;
+
 	public String getUploaddirectory() {
 		return uploaddirectory;
 	}
@@ -18,6 +20,13 @@ public enum Cache {
 		this.uploaddirectory = uploaddirectory;
 	}
 
+	public String getOwner() {
+		if (owner == null) {
+			Database database = new Database();
+			owner = database.getSkenavOwner();
+		}
+		return owner;
+	}
 	public byte[] getCookieKey() {
 		if (cookiekey == null) {
 			System.out.println("cookie key was null and enum was updated");

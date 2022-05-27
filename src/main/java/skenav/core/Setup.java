@@ -29,12 +29,16 @@ public class Setup {
 			return false;
 		}
 	}
+	public static void addUserHlsDirectory (String username) {
+		File userhlsdirectory = new File(OS.getUserContentDirectory() + "hls" + OS.pathSeparator() + username);
+		userhlsdirectory.mkdirs();
+	}
 
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
 	public void finalizeSetup(boolean firsttime, String username, String password) {
 		File skenavDirectory = new File(skenavdirectory);
 		File dbFile = new File(skenavdirectory + "database.mv.db");
-		File hlsDirectory = new File(skenavdirectory + "hlstestfolder");
+		File hlsDirectory = new File(skenavdirectory + "hls");
 		//File breadCrumb = new File(breadcrumbdirectory);
 		if (!skenavDirectory.exists()) {
 			final boolean mkdirs = skenavDirectory.mkdirs();

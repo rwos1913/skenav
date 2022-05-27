@@ -191,4 +191,38 @@ public class Database {
         }
         return authzlevel;
     }
+//TODO: handle files with same name
+    public boolean checkFileOwner(String filename, String unverifiedowner) {
+        String owner = null;
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT OWNER FROM TABLE1 WHERE FILE_NAME = ?");
+            statement.setString(1, filename);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                owner = rs.getString("owner");
+            }
+        }catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        if(owner.equals(unverifiedowner)) {
+            return true;
+        }
+        return false;
+    }
+
+    public String getSkenavOwner () {
+        String skenavowner = null;
+        try{
+            PreparedStatement statement = con.prepareStatement("SELECT USERNAME FROM USERS WHERE AUTHORIZATION = ?");
+            statement.setInt(1, 0);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                skenavowner = rs.getString("username");
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+        return skenavowner;
+    }
 }
