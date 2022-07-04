@@ -17,7 +17,7 @@ let search = "";
 let sort = "";
 function getSearchString() {
     //clearTable("tablebody");
-    searchvalue = document.getElementById("search");
+    let searchvalue = document.getElementById("search");
     search = searchvalue.value;
     console.log(search);
     let url = "/query?limit=100&search=" + search + "&sort=" + sort;
@@ -99,9 +99,9 @@ function determineMediaRequestType(filename, filetype) {
     }
 }
 function sendGenericFileRequest(filename){
-    var fileurl = "/download";
     var xhr = new XMLHttpRequest();
-    xhr.responseType = "arraybuffer";
+    var fileurl = '/download'
+    xhr.responseType = "blob";
     xhr.onload = () => {
         let data = xhr.response;
         downloadFile(data);
@@ -109,9 +109,19 @@ function sendGenericFileRequest(filename){
     xhr.open("GET", fileurl, true);
     xhr.setRequestHeader("File-Name", filename);
     xhr.send(null);
+
+
 }
-function downloadFile(data) {
-    data.download;
+function downloadFile(data, filename) {
+    var blob = new Blob([data], {type: 'application/octet-stream'});
+    let a = document.createElement("a");
+    a.style = "display: none";
+    document.body.appendChild(a);
+    let url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
 }
 function sendVideoRequest(filename) {
     var videoUrl = "/video?name=" + filename;

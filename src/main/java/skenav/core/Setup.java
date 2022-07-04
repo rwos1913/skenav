@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Setup {
 	static String breadcrumbdirectory = OS.getHomeDirectory() + "skenav-breadcrumb-do-not-delete.json";
@@ -34,11 +36,57 @@ public class Setup {
 		userhlsdirectory.mkdirs();
 	}
 
+	public void setupWithCli() {
+		String username = null;
+		String password = null;
+		String uploadDirectory = OS.getHomeDirectory() + "usercontent" + OS.pathSeparator();
+		for (int i = 0; i < 3; i++) {
+			String outputtext = null;
+			switch (i) {
+				case 0:
+					outputtext = "create admin username:";
+					username = scanForInput(outputtext);
+					break;
+				case 1:
+					outputtext = "create admin password:";
+					password = scanForInput(outputtext);
+					break;
+				case 2:
+					outputtext = "enter an upload directoy. press return to use default (" +uploadDirectory + ")";
+					String inputtext = scanForInput(outputtext);
+					if( !inputtext.equals("")) {
+						uploadDirectory = inputtext;
+					}
+					break;
+			}
+		}
+		System.out.println(username);
+		System.out.println(password);
+		System.out.println(uploadDirectory);
+	}
+
+	private String scanForInput(String outputtext){
+		Scanner scanner = new Scanner(System.in);
+		boolean validdata = false;
+		String inputtext = null;
+		do {
+			System.out.println(outputtext);
+			try {
+				inputtext = scanner.nextLine();
+				validdata = true;
+			}catch (InputMismatchException e) {
+				System.out.println("input must be a string");
+			}
+		}while (validdata==false);
+		return inputtext;
+	}
+
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
 	public void finalizeSetup(boolean firsttime, String username, String password) {
 		File skenavDirectory = new File(skenavdirectory);
 		File dbFile = new File(skenavdirectory + "database.mv.db");
 		File hlsDirectory = new File(skenavdirectory + "hls");
+		File certificateDirectory = new File(skenavdirectory + "certificates");
 		//File breadCrumb = new File(breadcrumbdirectory);
 		if (!skenavDirectory.exists()) {
 			final boolean mkdirs = skenavDirectory.mkdirs();
@@ -46,9 +94,9 @@ public class Setup {
 
 		}
 		if (!dbFile.exists()) {
-			Database.createTable();
-			System.out.println("table created");
 			Database database = new Database();
+			database.createTable();
+			System.out.println("table created");
 			if (firsttime == true) {
 				Crypto.setCryptoSeed();
 				Crypto crypto = new Crypto();
@@ -71,6 +119,10 @@ public class Setup {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		if (!certificateDirectory.exists()) {
+			final boolean mkdirs = certificateDirectory.mkdirs();
+			System.out.println(mkdirs);
 		}
 
 	}
@@ -102,27 +154,3 @@ class Json {
 		return uploaddirectory;
 	}
 }
-
-
-	/*Database database = new Database();
-	String uploaddirectory = database.getAppData("upload directory");
-		System.out.println(uploaddirectory);
-				File uploadDirectory = new File(uploaddirectory);
-				File dbFile = new File(uploaddirectory + "database.mv.db");
-				File hlsDirectory = new File(config.getUploadDirectory() + "usercontent" + OS.pathSeparator() + "hlstestfolder");
-
-				if (!uploadDirectory.exists()) {
-final boolean mkdirs = uploadDirectory.mkdirs();
-		System.out.println("----" + mkdirs);
-
-		}
-		if (!dbFile.exists()) {
-		Database.createTable();
-		//TODO: Check if crypto seed specifically exists
-		Crypto.setCryptoSeed();
-
-		}
-		if (!hlsDirectory.exists()) {
-final boolean mkdirs = hlsDirectory.mkdirs();
-		System.out.println("----" + mkdirs);
-		}*/

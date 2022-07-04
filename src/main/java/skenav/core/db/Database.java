@@ -1,4 +1,5 @@
 package skenav.core.db;
+import skenav.core.Cache;
 import skenav.core.OS;
 import skenav.core.security.LogicValidation;
 
@@ -16,7 +17,9 @@ public class Database {
     private void connect() {
         try{
             Class.forName("org.h2.Driver");
+            String directory = Cache.INSTANCE.getUploaddirectory();
             con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
+            System.out.println("directory from db class is: " + directory);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -34,16 +37,13 @@ public class Database {
 
     }
 // creates db file and table. Called staticly from the application class if db does not already exist
-    public static void createTable() {
+    public void createTable() {
         try {
-            Class.forName("org.h2.Driver");
-            Connection con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
             Statement statement = con.createStatement();
             statement.executeUpdate("CREATE TABLE table1 (file_id varchar(255) , file_name varchar(255), file_type varchar(255), upload_datetime varchar(50), owner varchar(255), authorized_users varchar(255))");
-            statement.executeUpdate("CREATE TABLE appdata (key varchar(255), value varchar(max))");
-            statement.executeUpdate("CREATE TABLE users (username varchar(255), password_hash varchar(255), authorization varchar(255), cookie_info varchar (255), account_creation_date  varchar (255), invited_by varchar(255), invite_date varchar(255), invite_accept_date varchar(255))");
+            statement.executeUpdate("CREATE TABLE appdata (key_ varchar(255), value_ varchar(max))");
+            statement.executeUpdate("CREATE TABLE users (username varchar(255), password_hash varchar(255), authorization_ varchar(255), cookie_info varchar (255), account_creation_date  varchar (255), invited_by varchar(255), invite_date varchar(255), invite_accept_date varchar(255))");
             statement.close();
-            con.close();
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -122,7 +122,7 @@ public class Database {
     }
     public void addToAppData (String key, String value) {
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO APPDATA (KEY, VALUE) VALUES (?, ?)");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO APPDATA (KEY_, VALUE_) VALUES (?, ?)");
             statement.setString(1, key);
             statement.setString(2, value);
             statement.executeUpdate();
@@ -134,24 +134,24 @@ public class Database {
     // permissions: 0 = owner 1 = admin 2= normal user
     public void addUser (String username, String passwordhash, int authorization) {
         try {
-            PreparedStatement statement = con.prepareStatement("INSERT INTO USERS (USERNAME, PASSWORD_HASH, AUTHORIZATION) VALUES (?, ?, ?)");
+            System.out.println("trying to add user to db");
+            PreparedStatement statement = con.prepareStatement("INSERT INTO USERS (USERNAME, PASSWORD_HASH, AUTHORIZATION_) VALUES (?, ?, ?)");
             statement.setString(1, username);
             statement.setString(2, passwordhash);
             statement.setInt(3, authorization);
             statement.executeUpdate();
-            statement.close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     public String getAppData(String key) {
         String value = new String();
         try {
-            PreparedStatement statement = con.prepareStatement("SELECT VALUE FROM APPDATA WHERE KEY = ?");
+            PreparedStatement statement = con.prepareStatement("SELECT VALUE_ FROM APPDATA WHERE KEY_ = ?");
             statement.setString(1, key);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                value = rs.getString("value");
+                value = rs.getString("value_");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -180,11 +180,11 @@ public class Database {
     public Integer getAuthzLevel(String username) {
         Integer authzlevel = null;
         try{
-            PreparedStatement statement = con.prepareStatement("SELECT AUTHORIZATION from USERS WHERE USERNAME = ?");
+            PreparedStatement statement = con.prepareStatement("SELECT AUTHORIZATION_ from USERS WHERE USERNAME = ?");
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                authzlevel = rs.getInt("authorization");
+                authzlevel = rs.getInt("authorization_");
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -213,7 +213,7 @@ public class Database {
     public String getSkenavOwner () {
         String skenavowner = null;
         try{
-            PreparedStatement statement = con.prepareStatement("SELECT USERNAME FROM USERS WHERE AUTHORIZATION = ?");
+            PreparedStatement statement = con.prepareStatement("SELECT USERNAME FROM USERS WHERE AUTHORIZATION_ = ?");
             statement.setInt(1, 0);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

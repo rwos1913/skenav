@@ -44,6 +44,7 @@ public class SetupResources {
             throw new WebApplicationException("passwords do not match", 400);
         }
         //TODO: if passwords do not match show message on front end
+        System.out.println("uploaddirectory in setup resource is: " + uploaddirectory);
         Cache cache = Cache.INSTANCE;
         cache.setUploaddirectory(uploaddirectory);
         Setup setup = new Setup();

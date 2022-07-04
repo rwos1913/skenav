@@ -22,6 +22,7 @@ public class RegisterResources {
         System.out.println(password);
         System.out.println(confirmpassword);
         System.out.println(invitecode);
+        // TODO: create user hls directory
         // TODO: check invite code
         String output = "backend register submit received";
         if (!password.equals(confirmpassword)){

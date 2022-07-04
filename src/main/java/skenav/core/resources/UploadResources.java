@@ -26,15 +26,14 @@ import skenav.core.security.UserManagement;
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
-    private String uploadDirectory;
     private String hashFilename;
     Database database;
-    public UploadResources(String uploadDirectory, Database database, String hashFilename) {
+    public UploadResources(Database database, String hashFilename) {
         this.hashFilename = hashFilename;
-        this.uploadDirectory = uploadDirectory;
         this.database = database;
 
     }
+    String uploadDirectory = OS.getUserContentDirectory();
 
 
     @POST
@@ -63,7 +62,7 @@ public class UploadResources {
         }
         //TODO: allow appending of file extension to hashed file names or just do that by defualt idk
         String datetime = getDateTime();
-        String uploadedFileLocation = uploadDirectory + "usercontent" + OS.pathSeparator() + filestring;
+        String uploadedFileLocation = uploadDirectory + OS.pathSeparator() + filestring;
         // calls write to file
         writeToFile(fileInputStream, uploadedFileLocation);
         database.addFile(filehash, filename, filetype, datetime, user);

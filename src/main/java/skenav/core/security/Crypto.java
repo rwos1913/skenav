@@ -86,6 +86,8 @@ public class Crypto {
         String hashedinputpassword = hashPassword(inputpassword);
         Database database = new Database();
         String referencehashedpassword = database.getPasswordHash(username);
+        System.out.println("user provided password is: " + hashedinputpassword);
+        System.out.println("Password from database is: " + referencehashedpassword);
         if (hashedinputpassword.equals(referencehashedpassword)) {
             return true;
         }

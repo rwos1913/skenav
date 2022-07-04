@@ -12,7 +12,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class VideoEncoder{
-    // TODO: Some mp4 files are h264 video some are hevc, support hevc
     String ffmpeg = Loader.load(org.bytedeco.ffmpeg.ffmpeg.class);
     public void encodeVideo(String filename, String uploaddirectory, String hlsfilename, String hlsdirectory) throws IOException {
         // get upload directory
@@ -24,16 +23,8 @@ public class VideoEncoder{
             ProcessBuilder findcodec = new ProcessBuilder(ffprobe, "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_name", "-of", "default=nokey=1:noprint_wrappers=1", pathToVideo);
             String badcodec = convertInputStreamToString(findcodec.start().getInputStream());
             String codec = badcodec.substring(0, badcodec.length() - 1);
-        /*try {
-            codec = IOUtils.toString(findcodec.start().getInputStream(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
             System.out.println("codec is " + codec);
             String h264 = "h264";
-            //byte[] bytes = rawh264.getBytes("UTF-8");
-            //String h264 = new String(bytes, "UTF-8");
             System.out.println("string literal is " + h264);
             String hashfunkystring = Crypto.sha3(codec);
             String hashnormalstring = Crypto.sha3(h264);
@@ -55,7 +46,7 @@ public class VideoEncoder{
 
     public void encodeMKV(String filename, String pathtovideo, String hlsfilename, String uploaddirectory, String hlsdirectory) {
         System.out.println("encoding mkv");
-        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathtovideo, "-codec", "copy", hlsdirectory + OS.pathSeparator()+ hlsfilename);
+        ProcessBuilder pb = new ProcessBuilder(ffmpeg, "-i", pathtovideo, "-codec", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", hlsdirectory + OS.pathSeparator()+ hlsfilename);
         try{
             pb.inheritIO().start().waitFor();
         }catch (InterruptedException | IOException e) {

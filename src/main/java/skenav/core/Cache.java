@@ -12,12 +12,23 @@ public enum Cache {
 
 	private String owner;
 
+	private String tlsauthcontent;
+
+	public String getTlsAuthContent() {
+		return tlsauthcontent;
+	}
+	public void setTlsAuthContent (String tlsauthcontent) {
+		this.tlsauthcontent = tlsauthcontent;
+	}
+
 	public String getUploaddirectory() {
+		System.out.println("upload directory from cache get method is: " + uploaddirectory);
 		return uploaddirectory;
 	}
 
 	public void setUploaddirectory (String uploaddirectory) {
 		this.uploaddirectory = uploaddirectory;
+		System.out.println("uploaddirectory in cache set method is: " + uploaddirectory);
 	}
 
 	public String getOwner() {

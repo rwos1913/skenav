@@ -11,25 +11,43 @@ import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 //import skenav.core.security.AuthFilter;
 import skenav.core.security.AuthFilter;
+import skenav.core.security.CertificateManagement;
 import skenav.core.security.Crypto;
 
 import javax.servlet.DispatcherType;
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.*;
 import java.util.EnumSet;
 
 public class SkenavApplication extends Application<SkenavConfiguration> {
 	public static void main(String[] args) throws Exception {
 		new SkenavApplication().run(args);
 		// test code
+		boolean usecli = false;
+		if (args.length > 0) {
+			for (String val: args) {
+				System.out.println(val);
+				if (val.equals("clisetup")) {
+					usecli = true;
+				}
+			}
+		}
 		if (!Setup.checkBreadcrumb()) {
-			try {
-				java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
+			if (usecli) {
+				Setup setup = new Setup();
+				setup.setupWithCli();
+			}
+			else {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
@@ -37,6 +55,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 			Setup setup = new Setup();
 			setup.finalizeSetup(false, null,null);
 		}
+		//CertificateManagement.testthings();
 
 	}
 
@@ -99,7 +118,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		Database database = new Database();
 		Crypto crypto = new Crypto();
 
-		final UploadResources uploadResources = new UploadResources(configuration.getUploadDirectory(), database, configuration.getHashFilename());
+		final UploadResources uploadResources = new UploadResources(database, configuration.getHashFilename());
 		final FileMgrResources fileMgrResources = new FileMgrResources();
 		final QueryResources queryResources = new QueryResources(database);
 		final VideoResources videoResources = new VideoResources(database);

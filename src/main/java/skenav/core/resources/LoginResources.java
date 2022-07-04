@@ -30,7 +30,7 @@ public class LoginResources {
             @FormDataParam("username") final String username,
             @FormDataParam("password") final String password) throws IOException{
         System.out.println("username is: " + username);
-        System.out.println("password is:" + password);
+        System.out.println("password is: " + password);
         String output = "this string is returned from the backend from the login form post request";
         if(Crypto.checkPassword(username,password)) {
             Database database = new Database();
