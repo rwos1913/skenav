@@ -1,11 +1,17 @@
 package skenav.core.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import skenav.core.db.Database;
+import skenav.core.security.Crypto;
+import skenav.core.security.UserManagement;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.Map;
+
 @Path("query")
 @Produces(MediaType.APPLICATION_JSON)
 public class QueryResources {
@@ -25,11 +31,21 @@ public class QueryResources {
             @DefaultValue("50")
             @QueryParam("limit") int limit,
             @DefaultValue("0")
-            @QueryParam("sort") int sortby
+            @QueryParam("sort") int sortby,
+            @CookieParam("SkenavAuth") Cookie cookie
+
             // sortby: 0 sorts by most recently added 1 least recently added 2 alphabetical by file name 3 reverse alphabetical by filename
     ){
         // sets filebundle object as 2d arraylist from Database class
-        ArrayList<ArrayList<String>> filebundle = database.viewFiles(search, limit, sortby);
+        Map<String, String> cookiemap;
+        try {
+            cookiemap = UserManagement.cookieToMap(cookie);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String owner = cookiemap.get("username");
+
+        ArrayList<ArrayList<String>> filebundle = database.viewFiles(search, limit, sortby, owner);
         System.out.println(filebundle);
         //create json objects
         ObjectMapper objectMapper = new ObjectMapper();

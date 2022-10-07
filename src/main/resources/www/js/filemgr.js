@@ -152,7 +152,7 @@ function playVideo(jsondata) {
         hls.attachMedia(video);
         hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             console.log('video and hls.js are now bound together');
-            hls.loadSource('/files/hls/' + username + "/" + playlistname);
+            hls.loadSource('/video/hlsfiles/' + playlistname);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                 hls.startLoad(0)
                 console.log(

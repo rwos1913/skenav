@@ -1,5 +1,6 @@
 uploadDirectory: /Users/currycarr/   # expects trailing slash
 hashFilename: false                  # expects true or false
+url: skenav.io
 assets:
   overrides:
     /files: /Users/currycarr/usercontent/

@@ -36,11 +36,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 			}
 		}
 		if (!Setup.checkBreadcrumb()) {
-			if (usecli) {
-				Setup setup = new Setup();
-				setup.setupWithCli();
-			}
-			else {
+			if (!usecli) {
 				try {
 					java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
 				} catch (IOException e) {
@@ -99,10 +95,10 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 			}
 			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
 					.put("/www", "/static")
-					.put(OS.getUserContentDirectory(), "/files")
 					.build()));
 		}
 		else {
+			bootstrap.addCommand(new MyCommand());
 			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
 					.put("/www", "/static")
 					.build()));
@@ -126,6 +122,8 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		final RegisterResources registerResources = new RegisterResources();
 		final SetupResources setupResources = new SetupResources();
 		final DownloadResources downloadResources = new DownloadResources();
+		final SettingsResources settingsResources = new SettingsResources();
+		final CertificateResources certificateResources = new CertificateResources();
 		// TEST METHODS
 		//queryResources.viewFilesToJSON();
 
@@ -137,6 +135,9 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		environment.jersey().register(loginResources);
 		environment.jersey().register(registerResources);
 		environment.jersey().register(downloadResources);
+		environment.jersey().register(settingsResources);
+		//TODO: make certificate resources unavailable when not needed
+		environment.jersey().register(certificateResources);
 		if (!Setup.checkBreadcrumb()){
 			environment.jersey().register(setupResources);
 		}

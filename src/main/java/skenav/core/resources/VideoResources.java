@@ -13,6 +13,7 @@ import skenav.core.security.UserManagement;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -63,6 +64,35 @@ public class VideoResources{
             e.printStackTrace();
         }
         return json;
+    }
+
+    @GET
+    @Path("hlsfiles/{filename}")
+    @Produces({"video/mp2t", "video/mp4", "application/x-mpegURL"})
+    public Response getHlsFiles (
+            @CookieParam("SkenavAuth") Cookie cookie,
+            @PathParam("filename") String filename
+    ) throws JsonProcessingException {
+        Map<String, String> map = UserManagement.cookieToMap(cookie);
+        String username = map.get("username");
+        String hlsdirectory = OS.getUserContentDirectory() +"hls" + OS.pathSeparator() + username;
+        String extension = FilenameUtils.getExtension(filename);
+        String contenttype = null;
+        File file = new File(hlsdirectory + OS.pathSeparator() + filename);
+        switch (extension) {
+            case "m3u8":
+                contenttype = "application/x-mpegURL";
+                break;
+
+            case "fmp4":
+                contenttype = "video/mp4";
+                break;
+
+            case "ts":
+                contenttype = "video/mp2t";
+                break;
+        }
+        return Response.ok(file, contenttype).build();
     }
     private String parseHlsFileName(String filename) {
         String noextfilename = FilenameUtils.removeExtension(filename);

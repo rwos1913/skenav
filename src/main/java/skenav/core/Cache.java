@@ -14,6 +14,18 @@ public enum Cache {
 
 	private String tlsauthcontent;
 
+	private String contact;
+
+	private String domain;
+
+	public String getDomain(){return domain;}
+	public void setDomain(String domain){
+		this.domain = domain;
+	}
+	public String getContact(){return contact;}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
 	public String getTlsAuthContent() {
 		return tlsauthcontent;
 	}

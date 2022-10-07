@@ -36,7 +36,7 @@ public class VideoEncoder{
             } else if (codec.equals("hevc")) {
                 encodeHevc(filename, pathToVideo, hlsfilename, uploaddirectory, hlsdirectory);
             } else {
-                System.out.println("you fucked up");
+                System.out.println("encoding fail");
             }
         }
         else if (filetype.equals("mkv")){

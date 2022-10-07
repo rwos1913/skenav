@@ -17,10 +17,8 @@ import java.util.Scanner;
 public class Setup {
 	static String breadcrumbdirectory = OS.getHomeDirectory() + "skenav-breadcrumb-do-not-delete.json";
 	static File breadcrumb = new File(breadcrumbdirectory);
-	String skenavdirectory;
 
 	public Setup() {
-		skenavdirectory = OS.getUserContentDirectory();
 	}
 
 	public static boolean checkBreadcrumb() {
@@ -40,7 +38,9 @@ public class Setup {
 		String username = null;
 		String password = null;
 		String uploadDirectory = OS.getHomeDirectory() + "usercontent" + OS.pathSeparator();
-		for (int i = 0; i < 3; i++) {
+		String contact = null;
+		String domain = null;
+		for (int i = 0; i < 5; i++) {
 			String outputtext = null;
 			switch (i) {
 				case 0:
@@ -58,11 +58,28 @@ public class Setup {
 						uploadDirectory = inputtext;
 					}
 					break;
+				case 3:
+					outputtext = "enter an email for Certificate Authority";
+					contact = scanForInput(outputtext);
+					break;
+				case 4:
+					outputtext = "please enter the domain name you are associated with this server's ip address";
+					domain = scanForInput(outputtext);
+					break;
 			}
 		}
 		System.out.println(username);
 		System.out.println(password);
 		System.out.println(uploadDirectory);
+		System.out.println(contact);
+		System.out.println(domain);
+		Cache.INSTANCE.setUploaddirectory(uploadDirectory);
+		finalizeSetup(true, username, password);
+		addUserHlsDirectory(username);
+		//TODO: get domain and contact from front end
+		//TODO: support IP address certs
+		Cache.INSTANCE.setContact(contact);
+		Cache.INSTANCE.setDomain(domain);
 	}
 
 	private String scanForInput(String outputtext){
@@ -83,6 +100,7 @@ public class Setup {
 
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
 	public void finalizeSetup(boolean firsttime, String username, String password) {
+		String skenavdirectory = OS.getUserContentDirectory();
 		File skenavDirectory = new File(skenavdirectory);
 		File dbFile = new File(skenavdirectory + "database.mv.db");
 		File hlsDirectory = new File(skenavdirectory + "hls");

@@ -50,18 +50,6 @@ public class AuthFilter implements Filter {
 					}
 					if (cookiename != null) {
 						if (checkAuthN(cookievalue) == true) {
-							if (path.startsWith("/files/hls/")){
-								System.out.println("file path captured is " + path);
-								String username = StringUtils.substringBetween(path, "/files/hls/", "/");
-								System.out.println(username);
-								Map<String, String> cookiemap = deserializeServletCookie(cookievalue);
-								String cookieusername = cookiemap.get("username");
-								System.out.println("Username from filter cookies is " + cookieusername);
-								System.out.println("Username from file is " + username);
-								if (!username.equals(cookieusername)){
-									return;
-								}
-							}
 							chain.doFilter(request, response);
 							return;
 						} else {

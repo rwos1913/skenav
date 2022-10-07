@@ -14,6 +14,10 @@ public class SkenavConfiguration extends Configuration implements AssetsBundleCo
     private String uploadDirectory;
     @NotEmpty
     private String hashFilename;
+
+    @NotEmpty
+    private String url;
+
     @Valid
     @NotNull
     @JsonProperty
@@ -21,6 +25,10 @@ public class SkenavConfiguration extends Configuration implements AssetsBundleCo
     @JsonProperty
     public void setUploadDirectory(String uploadDirectory) {
         this.uploadDirectory = uploadDirectory;
+    }
+    @JsonProperty
+    public String getUrl() {
+        return this.url;
     }
     @JsonProperty
     public String getUploadDirectory() {

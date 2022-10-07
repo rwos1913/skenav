@@ -1,6 +1,9 @@
 package skenav.core.resources;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import skenav.core.Setup;
+import skenav.core.db.Database;
+import skenav.core.security.Crypto;
 import skenav.core.security.UserManagement;
 
 import javax.ws.rs.*;
@@ -22,12 +25,16 @@ public class RegisterResources {
         System.out.println(password);
         System.out.println(confirmpassword);
         System.out.println(invitecode);
-        // TODO: create user hls directory
-        // TODO: check invite code
-        String output = "backend register submit received";
-        if (!password.equals(confirmpassword)){
+        Database database = new Database();
+        if (!database.checkInviteCode(invitecode) || !password.equals(confirmpassword)){
             throw new WebApplicationException(400);
         }
+        Setup.addUserHlsDirectory(username);
+        String hashedpassword = Crypto.hashPassword(password);
+        database.addUser(username, hashedpassword, 2);
+        Setup.addUserHlsDirectory(username);
+
+        String output = "backend register submit received";
 
         return Response.ok(output).build();
     }
