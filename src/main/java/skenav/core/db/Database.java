@@ -73,32 +73,35 @@ public class Database {
         if (!LogicValidation.intInRange(limit,1,100) || !LogicValidation.intInRange(search.length(), 0, 100) || !LogicValidation.intInRange(sortby, 0, 3)){
             throw new WebApplicationException(400);
         }
-        String selectquery = "";
+        String sortstring;
+        String standardstring = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) AND OWNER = ?";
         // sorts by most recently uploaded
         if (sortby == 0) {
-            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY upload_datetime DESC LIMIT ?";
+        sortstring = " ORDER BY upload_datetime DESC LIMIT ?";
         }
         //sorts by least recently uploaded
         else if (sortby == 1) {
-            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY upload_datetime LIMIT ?";
+            sortstring = " ORDER BY upload_datetime LIMIT ?";
         }
         // sorts alphabetically
         else if (sortby == 2) {
-            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY LOWER(file_name) LIMIT ?";
+            sortstring = " ORDER BY LOWER(file_name) LIMIT ?";
         }
         // sorts reverse alphabetically
         else if (sortby == 3) {
-            selectquery = "SELECT file_name, file_type, upload_datetime FROM table1 WHERE LOWER(file_name) LIKE LOWER(?) ORDER BY LOWER(file_name) DESC LIMIT ?";
+            sortstring = " ORDER BY LOWER(file_name) DESC LIMIT ?";
         }
         else {
             throw new WebApplicationException(400);
         }
+        String selectquery = standardstring + sortstring;
         // SQL parameterized select query with specified params
         try {
             PreparedStatement statement = con.prepareStatement(selectquery);
             // passing params into SQL query
             statement.setString(1, "%" + search + "%");
-            statement.setInt(2, limit);
+            statement.setString(2, owner);
+            statement.setInt(3, limit);
             ResultSet rs =  statement.executeQuery();
 
             while (rs.next()) {

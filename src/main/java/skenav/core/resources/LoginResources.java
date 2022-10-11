@@ -57,8 +57,7 @@ public class LoginResources {
             encryptedjson = Crypto.encrypt(unencryptedjson, key);
             URI indexpage = new URI("/");
             //NewCookie cookie = new NewCookie("encryptedjson", encryptedjson,"/", "", "auth cookie", 100000, false);
-            Response response = Response.seeOther(indexpage).header("Set-Cookie", "SkenavAuth=" + encryptedjson + "; SameSite=Strict; Path=/").build();
-            return response;
+            return Response.temporaryRedirect(indexpage).header("Set-Cookie", "SkenavAuth=" + encryptedjson + "; SameSite=Strict; Path=/").build();
         }
         else{
             throw new WebApplicationException("wrong password", 403);
