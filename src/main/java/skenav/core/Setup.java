@@ -2,7 +2,9 @@ package skenav.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.setup.Bootstrap;
+import org.shredzone.acme4j.exception.AcmeException;
 import skenav.core.db.Database;
+import skenav.core.security.CertificateManagement;
 import skenav.core.security.Crypto;
 
 import java.io.File;
@@ -63,7 +65,7 @@ public class Setup {
 					contact = scanForInput(outputtext);
 					break;
 				case 4:
-					outputtext = "please enter the domain name you are associated with this server's ip address";
+					outputtext = "please enter the domain name you are associating with this server's ip address";
 					domain = scanForInput(outputtext);
 					break;
 			}
@@ -74,12 +76,12 @@ public class Setup {
 		System.out.println(contact);
 		System.out.println(domain);
 		Cache.INSTANCE.setUploaddirectory(uploadDirectory);
-		finalizeSetup(true, username, password);
 		addUserHlsDirectory(username);
 		//TODO: get domain and contact from front end
 		//TODO: support IP address certs
 		Cache.INSTANCE.setContact(contact);
 		Cache.INSTANCE.setDomain(domain);
+		finalizeSetup(true, username, password);
 	}
 
 	private String scanForInput(String outputtext){
@@ -115,7 +117,7 @@ public class Setup {
 			Database database = new Database();
 			database.createTable();
 			System.out.println("table created");
-			if (firsttime == true) {
+			if (firsttime) {
 				Crypto.setCryptoSeed();
 				Crypto crypto = new Crypto();
 				byte[] key = crypto.newKey();
@@ -123,6 +125,8 @@ public class Setup {
 				System.out.println("key right after generation is: " + key);
 				System.out.println(("base64 key immediately after encoding is" + base64key));
 				database.addToAppData("cookie key", base64key);
+				database.addToAppData("CA contact", Cache.INSTANCE.getContact());
+				database.addToAppData("CA domain", Cache.INSTANCE.getDomain());
 				String passwordhash = Crypto.hashPassword(password);
 				database.addUser(username, passwordhash, 0);
 			}
@@ -138,9 +142,17 @@ public class Setup {
 				e.printStackTrace();
 			}
 		}
-		if (!certificateDirectory.exists()) {
-			final boolean mkdirs = certificateDirectory.mkdirs();
-			System.out.println(mkdirs);
+		if (!certificateDirectory.exists() && firsttime == false) {
+			certificateDirectory.mkdirs();
+			try {
+				CertificateManagement.createAccount();
+			} catch (AcmeException e) {
+					throw new RuntimeException(e);
+			}
+			CertificateManagement.orderCert();
+		}
+		if (firsttime == true) {
+			System.out.println("Skenav must be closed and restarted");
 		}
 
 	}

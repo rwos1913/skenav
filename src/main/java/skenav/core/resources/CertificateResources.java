@@ -18,7 +18,7 @@ public class CertificateResources {
 		if (!requestedtoken.equals(token)) {
 			throw new WebApplicationException();
 		}
-		return Response.ok(token, MediaType.TEXT_PLAIN).build();
+		return Response.ok(content, "text/plain").build();
 
 	}
 }

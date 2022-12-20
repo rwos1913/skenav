@@ -155,7 +155,7 @@
                             <mainClass>skenav.core.SkenavApplication</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>./usercontent/</Class-Path>
+                            <!--<Class-Path>./usercontent/</Class-Path>-->
                         </manifestEntries>
                     </archive>
                 </configuration>

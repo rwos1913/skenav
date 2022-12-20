@@ -27,6 +27,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		new SkenavApplication().run(args);
 		// test code
 		boolean usecli = false;
+		boolean useweb = false;
 		if (args.length > 0) {
 			for (String val: args) {
 				System.out.println(val);
@@ -35,23 +36,22 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 				}
 			}
 		}
-		if (!Setup.checkBreadcrumb()) {
-			if (!usecli) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
+		if (!Setup.checkBreadcrumb() && !usecli) {
+			try {
+				java.awt.Desktop.getDesktop().browse(new URI("http://localhost:8080/setup"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
 			}
+			useweb = true;
+
 
 		}
-		else {
+		if (Setup.checkBreadcrumb() && !usecli && !useweb) {
 			Setup setup = new Setup();
 			setup.finalizeSetup(false, null,null);
 		}
-		//CertificateManagement.testthings();
 
 	}
 

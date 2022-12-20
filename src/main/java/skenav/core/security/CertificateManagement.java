@@ -7,6 +7,7 @@ import org.shredzone.acme4j.exception.AcmeException;
 import org.shredzone.acme4j.util.CSRBuilder;
 import org.shredzone.acme4j.util.KeyPairUtils;
 import skenav.core.Cache;
+import skenav.core.db.Database;
 
 import java.io.*;
 import java.net.URL;
@@ -21,24 +22,21 @@ public class CertificateManagement {
 	public static void testthings() {
 		//KeyPair certkeypair = generateKeyPair();
 		//saveKeypairToFile(certkeypair);
-		KeyPair accoutkeypair = readKeyPairFile();
-		Session session = createSession();
-		URL accounturl = getAccountURL(accoutkeypair, session);
-
 
 
 
 
 	}
 
-	/*public static Certificate orderCert() {
-		KeyPair kp = readKeyPairFile();
+	public static void orderCert() {
+		Database database = new Database();
+		KeyPair kp = readKeyPairFile("accountkeypair");
 		Account account = login(kp);
 		Order order = null;
-		String domain = Cache.INSTANCE.getDomain();
+		String domain = database.getAppData("CA domain");
 		try {
 			order = account.newOrder()
-					.domains(domain, "*." + domain)
+					.domains(domain)
 					.create();
 		} catch (AcmeException e) {
 			e.printStackTrace();
@@ -54,11 +52,11 @@ public class CertificateManagement {
 		}
 
 
-
+		KeyPair domainkeypair = readKeyPairFile("domainkeypair");
 		CSRBuilder csrb = new CSRBuilder();
-		csrb.addDomains(domain, "*." + domain);
+		csrb.addDomains(domain);
 		try {
-			csrb.sign(kp);
+			csrb.sign(domainkeypair);
 			byte[] csr = csrb.getEncoded();
 			order.execute(csr);
 		} catch (IOException e) {
@@ -67,8 +65,9 @@ public class CertificateManagement {
 			e.printStackTrace();
 		}
 
-		while (order.getStatus() != Status.VALID || order.getStatus() != Status.INVALID) {
+		while (order.getStatus() != Status.VALID && order.getStatus() != Status.INVALID) {
 			try {
+				System.out.println("checking order status");
 				Thread.sleep(3000L);
 				order.update();
 			} catch (InterruptedException e) {
@@ -78,19 +77,22 @@ public class CertificateManagement {
 			}
 
 		}
-		//TODO: figure out how to write certificate chains to the filesystem
 		if (order.getStatus() == Status.VALID) {
+			System.out.println("certificate order status valid");
 			List<X509Certificate> chain = order.getCertificate().getCertificateChain();
 			Certificate cert = order.getCertificate();
-			try (FileWriter fw = new FileWriter("cert-chain.crt")) {
-				cert.writeCertificate(fw, chain);
+			String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
+			try (FileWriter fw = new FileWriter(certdirectory +"cert-chain.crt")) {
+				cert.writeCertificate(fw);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
-		else return null;
+		else {
+			System.out.println("certificate order invalid");
+		}
 
-	}*/
+	}
 
 	public static Session createSession() {
 		String caurl = "acme://letsencrypt.org/staging";
@@ -106,46 +108,46 @@ public class CertificateManagement {
 		return session;
 	}
 
-	public static KeyPair generateKeyPair () {
+	public static KeyPair generateKeyPair (String name) {
 		KeyPair accountkeypair = KeyPairUtils.createKeyPair(2048);
-		saveKeypairToFile(accountkeypair);
+		saveKeypairToFile(accountkeypair, name);
 		return accountkeypair;
 	}
 
-	public static void saveKeypairToFile(KeyPair keypair) {
+	public static void saveKeypairToFile(KeyPair keypair, String name) {
 		String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
-		try (FileWriter fw = new FileWriter(new File(certdirectory, "keypair.pem"))) {
+		try (FileWriter fw = new FileWriter(new File(certdirectory, name + ".pem"))) {
 			KeyPairUtils.writeKeyPair(keypair, fw);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	public static KeyPair readKeyPairFile() {
+	public static KeyPair readKeyPairFile(String name) {
 		String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
-		try (FileReader fr = new FileReader(new File(certdirectory, "keypair.pem"))) {
+		try (FileReader fr = new FileReader(new File(certdirectory, name + ".pem"))) {
 			return KeyPairUtils.readKeyPair(fr);
 		} catch (FileNotFoundException e) {
+			System.out.println("keypair file not found");
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	public static URL createAccount() {
-		KeyPair kp = generateKeyPair();
+	public static void createAccount() throws AcmeException {
+		KeyPair kp = generateKeyPair("accountkeypair");
+		generateKeyPair("domainkeypair");
 		Session session = createSession();
-		URL accountlocationurl = null;
-		try {
-			Account account = new AccountBuilder()
-					//TODO: add email to database and front end
-					.addContact(Cache.INSTANCE.getContact())
-					.agreeToTermsOfService()
-					.useKeyPair(kp)
-					.create(session);
-			accountlocationurl = account.getLocation();
-		} catch (AcmeException e) {
-			throw new RuntimeException(e);
-		}
-		return accountlocationurl;
+		Database database = new Database();
+		String contact = database.getAppData("CA contact");
+		System.out.println("contact from createAccount method is" + contact);
+		Account account = new AccountBuilder()
+				//TODO: add email to database and front end and domain
+				.addContact("mailto:" + contact)
+				.agreeToTermsOfService()
+				.useKeyPair(kp)
+				.create(session);
+		System.out.println("CA account created");
+		System.out.println("Account URL is " + account.getLocation());
 	}
 
 	public static Account login (KeyPair kp) {
@@ -196,16 +198,15 @@ public class CertificateManagement {
 				throw new RuntimeException(e);
 			}
 		}
-		if (auth.getStatus() == Status.VALID){
-			return;
+		if (auth.getStatus() != Status.VALID){
+			throw new Exception("http challenge failed");
 		}
-		else {throw new Exception("http challenge failed");}
 	}
 	//TODO: add domain name configuration and make certs available to ip addresses
 	public static void finalizeOrder() {
-		KeyPair keyPair = readKeyPairFile();
+		KeyPair keyPair = readKeyPairFile("accountkeypair");
 		CSRBuilder csrBuilder = new CSRBuilder();
-		csrBuilder.addDomains("skenav.io", "*.skenav.io");
+		csrBuilder.addDomains("skenav.io");
 		csrBuilder.setOrganization("skenavtest");
 		try {
 			csrBuilder.sign(keyPair);

@@ -22,7 +22,9 @@ public enum Cache {
 	public void setDomain(String domain){
 		this.domain = domain;
 	}
-	public String getContact(){return contact;}
+	public String getContact(){
+		System.out.println("contact from cache getter is " + contact);
+		return contact;}
 	public void setContact(String contact) {
 		this.contact = contact;
 	}
