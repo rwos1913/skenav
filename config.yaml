@@ -4,7 +4,8 @@ url: skenav.io
 server:
   applicationConnectors:
     - type: http
-      port: 80
+      port: 8082
+  adminConnectors: []
 assets:
   overrides:
     /files: /Users/currycarr/usercontent/
