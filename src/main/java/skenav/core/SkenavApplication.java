@@ -11,7 +11,7 @@ import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 //import skenav.core.security.AuthFilter;
 import skenav.core.security.AuthFilter;
-import skenav.core.security.CertificateManagement;
+//import skenav.core.security.CertificateManagement;
 import skenav.core.security.Crypto;
 
 import javax.servlet.DispatcherType;
