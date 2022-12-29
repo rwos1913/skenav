@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dropwizard.setup.Bootstrap;
 import org.shredzone.acme4j.exception.AcmeException;
 import skenav.core.db.Database;
-import skenav.core.security.CertificateManagement;
+//import skenav.core.security.CertificateManagement;
 import skenav.core.security.Crypto;
 
 import java.io.File;
@@ -142,7 +142,7 @@ public class Setup {
 				e.printStackTrace();
 			}
 		}
-		if (!certificateDirectory.exists() && firsttime == false) {
+		/*if (!certificateDirectory.exists() && firsttime == false) {
 			certificateDirectory.mkdirs();
 			try {
 				CertificateManagement.createAccount();
@@ -150,7 +150,7 @@ public class Setup {
 					throw new RuntimeException(e);
 			}
 			CertificateManagement.orderCert();
-		}
+		}*/
 		if (firsttime == true) {
 			System.out.println("Skenav must be closed and restarted");
 		}

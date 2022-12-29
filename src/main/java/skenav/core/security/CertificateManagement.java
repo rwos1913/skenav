@@ -1,4 +1,4 @@
-package skenav.core.security;
+/*package skenav.core.security;
 
 import org.shredzone.acme4j.*;
 import org.shredzone.acme4j.Certificate;
@@ -222,3 +222,4 @@ public class CertificateManagement {
 
 	}
 }
+*/
