@@ -104,7 +104,7 @@ function sendGenericFileRequest(filename){
     xhr.responseType = "blob";
     xhr.onload = () => {
         let data = xhr.response;
-        downloadFile(data);
+        downloadFile(data, filename);
     }
     xhr.open("GET", fileurl, true);
     xhr.setRequestHeader("File-Name", filename);
