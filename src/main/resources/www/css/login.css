@@ -10,6 +10,7 @@
 #loginbox {
     border-style: solid;
     width: 100%;
+    display: contents;
 }
 .logininput {
     border-style: none;
@@ -18,27 +19,40 @@
     border-bottom-color: dimgrey;
 }
 #username {
-    margin-left: 0%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 0;
     width: 47%;
 }
 #password {
-    margin-right: 0%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-right: 0;
     width: 47%;
     float: right;
 }
 #remembermecontainer {
-    margin-left: 0%;
+    margin-left: 0;
     display: inline;
     position: absolute;
-    bottom: 0%;
+    bottom: 0;
+    padding: 10px;
 }
 #toregisterbutton{
     float: right;
     margin-right: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 30px;
+    width: 65px;
 }
 #loginbutton {
     margin-right: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
     float: right;
+    height: 30px;
+    width: 65px;
 }
 #regusername {
     margin-left: 0%;
