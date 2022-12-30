@@ -53,6 +53,7 @@ public enum Cache {
 		return owner;
 	}
 	public byte[] getCookieKey() {
+		System.out.println("cookie key from cache is" + cookiekey);
 		if (cookiekey == null) {
 			System.out.println("cookie key was null and enum was updated");
 			Database database = new Database();

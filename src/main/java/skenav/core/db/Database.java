@@ -18,7 +18,7 @@ public class Database {
         try{
             Class.forName("org.h2.Driver");
             String directory = Cache.INSTANCE.getUploaddirectory();
-            con = DriverManager.getConnection("jdbc:h2:" + OS.getUserContentDirectory() + "database");
+            con = DriverManager.getConnection("jdbc:h2:" + directory + "database");
             System.out.println("directory from db class is: " + directory);
         }
         catch (Exception e) {

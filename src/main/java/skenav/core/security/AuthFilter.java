@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
 			String path = servletrequest.getRequestURI();
 			System.out.println("path from filter is" + path);
 			if (
-					path.equals("/login") || path.equals("/static/js/login.js") || path.equals("/static/css/login.css") || path.equals("/static/image/logo.svg") || path.equals("/login/submitlogin") || path.equals("/setup") || path.equals("/setup/submitowner") || path.equals("/static/js/setup.js") || path.startsWith("/.well-known/acme-challenge/")
+					path.equals("/login") || path.equals("/static/js/login.js") || path.equals("/static/css/login.css") || path.equals("/static/image/logo.svg") || path.equals("/login/submitlogin") || path.equals("/setup") || path.equals("/setup/submitowner") || path.equals("/static/js/setup.js") || path.equals("/static/css/setup.css")|| path.startsWith("/.well-known/acme-challenge/")
 			){
 				chain.doFilter(request, response);
 				return;

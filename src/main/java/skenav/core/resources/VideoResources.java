@@ -23,10 +23,6 @@ import java.util.concurrent.TimeUnit;
 @Path("video")
 @Produces(MediaType.APPLICATION_JSON)
 public class VideoResources{
-    Database database;
-    public VideoResources(Database database)  {
-        this.database = database;
-    }
 
     @GET
     public String videoRequestHandler(
@@ -35,6 +31,7 @@ public class VideoResources{
     ) throws IOException, InterruptedException {
         Map<String, String> map = UserManagement.cookieToMap(cookie);
         String username = map.get("username");
+        Database database = new Database();
         if(database.checkFileOwner(filename, username) == false) {
             throw new WebApplicationException(401);
         }

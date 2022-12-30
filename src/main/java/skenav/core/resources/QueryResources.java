@@ -16,10 +16,6 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class QueryResources {
     // scoping Database class to this resource
-    Database database;
-    public QueryResources(Database database) {
-        this.database = database;
-    }
 
     //@Path("viewfiles")
     // get request that returns arraylist called from viewFiles as json string to client
@@ -44,7 +40,7 @@ public class QueryResources {
             throw new RuntimeException(e);
         }
         String owner = cookiemap.get("username");
-
+        Database database = new Database();
         ArrayList<ArrayList<String>> filebundle = database.viewFiles(search, limit, sortby, owner);
         System.out.println(filebundle);
         //create json objects

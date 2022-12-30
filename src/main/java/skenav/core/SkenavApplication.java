@@ -111,13 +111,12 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 	@Override
 	public void run(SkenavConfiguration configuration, Environment environment) throws URISyntaxException, IOException {
 		environment_setup(configuration,environment);
-		Database database = new Database();
 		Crypto crypto = new Crypto();
 
-		final UploadResources uploadResources = new UploadResources(database, configuration.getHashFilename());
+		final UploadResources uploadResources = new UploadResources(configuration.getHashFilename());
 		final FileMgrResources fileMgrResources = new FileMgrResources();
-		final QueryResources queryResources = new QueryResources(database);
-		final VideoResources videoResources = new VideoResources(database);
+		final QueryResources queryResources = new QueryResources();
+		final VideoResources videoResources = new VideoResources();
 		final LoginResources loginResources = new LoginResources();
 		final RegisterResources registerResources = new RegisterResources();
 		final SetupResources setupResources = new SetupResources();
