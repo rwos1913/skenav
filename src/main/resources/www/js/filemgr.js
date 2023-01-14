@@ -80,12 +80,34 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     tr.onclick = function() {determineMediaRequestType(filename, filetype)};
     var td0 = tr.insertCell(0);
     td0.textContent = filename;
+    var downloadbutton = document.createElement('button');
+    var deletebutton = document.createElement('button');
+    downloadbutton.type = "button";
+    deletebutton.type = "button";
+    downloadbutton.textContent= "download"
+    deletebutton.textContent = "delete";
+    downloadbutton.style.float = "right"
+    deletebutton.style.float = "right";
+    downloadbutton.style.display = "none"
+    deletebutton.style.display = "none";
+    deletebutton.onclick = function () {if (confirm("delete " + filename + "?")){deleteFile(filename)}};
+    downloadbutton.onclick = function () {sendDownloadRequest(filename)};
+    deletebutton.addEventListener('click', function (event){event.stopPropagation()});
+    downloadbutton.addEventListener('click', function (event) {event.stopPropagation()});
+    tr.onmouseenter = function () {
+        deletebutton.style.display = "inline"
+        downloadbutton.style.display = "inline"};
+    tr.onmouseleave = function () {
+        deletebutton.style.display = "none"
+        downloadbutton.style.display = "none"}
+    td0.appendChild(deletebutton);
+    td0.appendChild(downloadbutton);
     var td1 = tr.insertCell(1);
     td1.textContent = filetype;
-    td1.className = "tablecell"
+    td1.className = "tablecell";
     //TODO: replace file types with icons
     var td2 = tr.insertCell(2);
-    td2.className = "tablecell"
+    td2.className = "tablecell";
     td2.textContent = uploaddate;
     table.appendChild(tr);
 }
@@ -95,10 +117,10 @@ function determineMediaRequestType(filename, filetype) {
         sendVideoRequest(filename)
     }
     else {
-        sendGenericFileRequest(filename);
+        alert("file only available for download");
     }
 }
-function sendGenericFileRequest(filename){
+function sendDownloadRequest(filename){
     var xhr = new XMLHttpRequest();
     var fileurl = '/download'
     xhr.responseType = "blob";
@@ -122,6 +144,22 @@ function downloadFile(data, filename) {
     a.download = filename;
     a.click();
     window.URL.revokeObjectURL(url);
+}
+function deleteFile(filename) {
+    fetch('/delete', {
+        method: 'POST',
+        body: filename,
+        headers: {
+            'Content-type': 'text/plain'
+        }
+    }).then( function (response) {
+        if (response.ok) {
+            clearTable();
+            let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+            getJson(url, callback);
+
+        }
+    })
 }
 function sendVideoRequest(filename) {
     var videoUrl = "/video?name=" + filename;
@@ -176,6 +214,11 @@ function uploadprompt() {
 
     formData.append("file", fileupload);
     req.open("POST","/upload");
+    req.onload = () => {
+        clearTable();
+        let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+        getJson(url,callback);
+    }
     req.send(formData);
 }
 

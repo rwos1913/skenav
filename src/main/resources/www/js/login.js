@@ -34,10 +34,12 @@ function submitForm(event) {
 	request.open('POST', url, true);
 	request.onload = function () {
 		// request successful
+		window.location.href = "/";
 	};
 
 	request.onerror = function () {
 		// request failed
+		alert("incorrect password or something")
 	}
 
 	request.send(new FormData(event.target));

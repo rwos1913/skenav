@@ -123,6 +123,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		final DownloadResources downloadResources = new DownloadResources();
 		final SettingsResources settingsResources = new SettingsResources();
 		final CertificateResources certificateResources = new CertificateResources();
+		final DeleteFileResources deleteFileResources = new DeleteFileResources();
 		// TEST METHODS
 		//queryResources.viewFilesToJSON();
 
@@ -137,6 +138,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		environment.jersey().register(settingsResources);
 		//TODO: make certificate resources unavailable when not needed
 		environment.jersey().register(certificateResources);
+		environment.jersey().register(deleteFileResources);
 		if (!Setup.checkBreadcrumb()){
 			environment.jersey().register(setupResources);
 		}

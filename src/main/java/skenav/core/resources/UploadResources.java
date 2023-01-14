@@ -49,7 +49,7 @@ public class UploadResources {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
-        String user = parseCookieForUserName(cookie);
+        String user = UserManagement.parseCookieForUserName(cookie);
         System.out.println("file name from content dispo header is:" + filename);
         String filestring;
         //boolean b1 = Boolean.parseBoolean(hashFilename);
@@ -149,10 +149,6 @@ public class UploadResources {
         return output;
     }
 
-    private String parseCookieForUserName(Cookie cookie) throws JsonProcessingException {
-        Map<String, String> cookiemap = UserManagement.cookieToMap(cookie);
-        String username = cookiemap.get("username");
-        return username;
-    }
+
 
 }

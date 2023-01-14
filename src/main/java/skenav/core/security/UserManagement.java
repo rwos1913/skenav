@@ -17,4 +17,9 @@ public class UserManagement {
 		Map<String, String> cookiemap = objectMapper.readValue(plaintextjson, HashMap.class);
 		return cookiemap;
 	}
+	public static String parseCookieForUserName(Cookie cookie) throws JsonProcessingException {
+		Map<String, String> cookiemap = cookieToMap(cookie);
+		String username = cookiemap.get("username");
+		return username;
+	}
 }

@@ -255,4 +255,13 @@ public class Database {
             e.printStackTrace();
         }
     }
+    public void deleteFile (String filename) {
+        try{
+            PreparedStatement statement = con.prepareStatement("DELETE FROM TABLE1 WHERE FILE_NAME = ?");
+            statement.setString(1, filename);
+            statement.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

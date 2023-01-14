@@ -12,6 +12,7 @@ function preventRedirect(event) {
 	request.open("POST", "/setup/submitowner", true);
 	request.onload = () => {
 		console.log("admin form sucessfully submitted");
+		window.location.href = "/";
 	}
 	request.onerror = function() {
 		alert("failed to submit user information");
