@@ -1,4 +1,4 @@
-/*package skenav.core.security;
+package skenav.core.security;
 
 import org.shredzone.acme4j.*;
 import org.shredzone.acme4j.Certificate;
@@ -7,6 +7,7 @@ import org.shredzone.acme4j.exception.AcmeException;
 import org.shredzone.acme4j.util.CSRBuilder;
 import org.shredzone.acme4j.util.KeyPairUtils;
 import skenav.core.Cache;
+import skenav.core.OS;
 import skenav.core.db.Database;
 
 import java.io.*;
@@ -80,13 +81,25 @@ public class CertificateManagement {
 		if (order.getStatus() == Status.VALID) {
 			System.out.println("certificate order status valid");
 			List<X509Certificate> chain = order.getCertificate().getCertificateChain();
-			Certificate cert = order.getCertificate();
-			String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
-			try (FileWriter fw = new FileWriter(certdirectory +"cert-chain.crt")) {
+			//Certificate cert = order.getCertificate();
+			String certdirectory = OS.getSkenavDirectory() + "certificates/";
+			X509Certificate[] certarray = chain.toArray(new X509Certificate[2]);
+			try {
+				addToKeyStore(certarray);
+			} catch (KeyStoreException e) {
+				throw new RuntimeException(e);
+			} catch (CertificateException e) {
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchAlgorithmException e) {
+				throw new RuntimeException(e);
+			}
+			/*try (FileWriter fw = new FileWriter(certdirectory +"cert-chain.crt")) {
 				cert.writeCertificate(fw);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
-			}
+			}*/
 		}
 		else {
 			System.out.println("certificate order invalid");
@@ -95,7 +108,7 @@ public class CertificateManagement {
 	}
 
 	public static Session createSession() {
-		String caurl = "acme://letsencrypt.org/staging";
+		String caurl = "acme://letsencrypt.org";
 		Session session = new Session(caurl);
 		Metadata metadata = null;
 		try {
@@ -115,7 +128,7 @@ public class CertificateManagement {
 	}
 
 	public static void saveKeypairToFile(KeyPair keypair, String name) {
-		String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
+		String certdirectory = OS.getSkenavDirectory();
 		try (FileWriter fw = new FileWriter(new File(certdirectory, name + ".pem"))) {
 			KeyPairUtils.writeKeyPair(keypair, fw);
 		} catch (IOException e) {
@@ -123,7 +136,7 @@ public class CertificateManagement {
 		}
 	}
 	public static KeyPair readKeyPairFile(String name) {
-		String certdirectory = Cache.INSTANCE.getUploaddirectory() + "certificates/";
+		String certdirectory = OS.getSkenavDirectory();
 		try (FileReader fr = new FileReader(new File(certdirectory, name + ".pem"))) {
 			return KeyPairUtils.readKeyPair(fr);
 		} catch (FileNotFoundException e) {
@@ -214,12 +227,23 @@ public class CertificateManagement {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public static void createKeyStore() throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
-		KeyStore ks = KeyStore.getInstance("pkcs12");
-		ks.load(null,null);
-		FileInputStream is = new FileInputStream("cert-chain.crt");
+	public static void createKeyStore() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException {
+		KeyStore ks = KeyStore.getInstance("JKS");
+		char[] pwdarray = "changeit".toCharArray();
+		ks.load(null, pwdarray);
+		FileOutputStream fos = new FileOutputStream(OS.getSkenavDirectory() + "SkenavKeyStore.jks");
+		ks.store(fos, pwdarray);
+	}
+	public static void addToKeyStore(X509Certificate[] chain) throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
+		String keystorepath = OS.getSkenavDirectory() + "SkenavKeyStore.jks";
+		KeyPair kp = readKeyPairFile("domainkeypair");
+		KeyStore ks = KeyStore.getInstance("JKS");
+		char[] password = "changeit".toCharArray();
+		ks.load(new FileInputStream(keystorepath),password);
+		ks.setKeyEntry("letsencrypt-certs", kp.getPrivate(), password, chain);
+		//ks.setKeyEntry("letsencrypt-certs", kp.getPrivate(), password, chain);
+		FileOutputStream newkeystorefile = new FileOutputStream(keystorepath);
+		ks.store(newkeystorefile, password);
 
 	}
 }
-*/

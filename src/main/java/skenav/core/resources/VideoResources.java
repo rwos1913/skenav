@@ -35,8 +35,8 @@ public class VideoResources{
         if(database.checkFileOwner(filename, username) == false) {
             throw new WebApplicationException(401);
         }
-        String uploaddirectory = OS.getUserContentDirectory();
-        String hlsdirectory = uploaddirectory + "hls" + OS.pathSeparator() + username;
+        String uploaddirectory = OS.getUserFilesDirectory(username);
+        String hlsdirectory = OS.getUserHlsDirectory(username);
         FileUtils.cleanDirectory(new File(hlsdirectory));
         String hlsfilename = parseHlsFileName(filename);
         // calls method to encode video
@@ -72,10 +72,10 @@ public class VideoResources{
     ) throws JsonProcessingException {
         Map<String, String> map = UserManagement.cookieToMap(cookie);
         String username = map.get("username");
-        String hlsdirectory = OS.getUserContentDirectory() +"hls" + OS.pathSeparator() + username;
+        String hlsdirectory = OS.getUserHlsDirectory(username);
         String extension = FilenameUtils.getExtension(filename);
         String contenttype = null;
-        File file = new File(hlsdirectory + OS.pathSeparator() + filename);
+        File file = new File(hlsdirectory + filename);
         switch (extension) {
             case "m3u8":
                 contenttype = "application/x-mpegURL";

@@ -17,7 +17,7 @@ public class Database {
     private void connect() {
         try{
             Class.forName("org.h2.Driver");
-            String directory = Cache.INSTANCE.getUploaddirectory();
+            String directory = OS.getSkenavDirectory();
             con = DriverManager.getConnection("jdbc:h2:" + directory + "database");
             System.out.println("directory from db class is: " + directory);
         }
@@ -197,21 +197,19 @@ public class Database {
     }
 //TODO: handle files with same name
     public boolean checkFileOwner(String filename, String unverifiedowner) {
-        String owner = null;
+        boolean exists = false;
         try {
-            PreparedStatement statement = con.prepareStatement("SELECT OWNER FROM TABLE1 WHERE FILE_NAME = ?");
+            PreparedStatement statement = con.prepareStatement("SELECT 1 FROM TABLE1 WHERE FILE_NAME = ? and OWNER = ?");
             statement.setString(1, filename);
+            statement.setString(2, unverifiedowner);
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                owner = rs.getString("owner");
+            if (rs.next()){
+                exists = true;
             }
         }catch (SQLException throwables){
             throwables.printStackTrace();
         }
-        if(owner.equals(unverifiedowner)) {
-            return true;
-        }
-        return false;
+        return exists;
     }
 
     public String getSkenavOwner () {

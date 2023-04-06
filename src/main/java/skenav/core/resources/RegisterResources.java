@@ -4,7 +4,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import skenav.core.Setup;
 import skenav.core.db.Database;
 import skenav.core.security.Crypto;
-import skenav.core.security.UserManagement;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,10 +28,9 @@ public class RegisterResources {
         if (!database.checkInviteCode(invitecode) || !password.equals(confirmpassword)){
             throw new WebApplicationException(400);
         }
-        Setup.addUserHlsDirectory(username);
         String hashedpassword = Crypto.hashPassword(password);
         database.addUser(username, hashedpassword, 2);
-        Setup.addUserHlsDirectory(username);
+        Setup.addNewUserDirectories(username);
 
         String output = "backend register submit received";
 

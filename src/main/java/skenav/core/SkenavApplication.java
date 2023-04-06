@@ -2,10 +2,14 @@ package skenav.core;
 
 import com.google.common.collect.ImmutableMap;
 import io.dropwizard.Application;
+import io.dropwizard.Configuration;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
+import io.dropwizard.server.ServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import org.eclipse.jetty.server.Server;
 import skenav.core.db.Database;
 import skenav.core.resources.*;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
@@ -36,7 +40,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 				}
 			}
 		}
-		if (!Setup.checkBreadcrumb() && !usecli) {
+		if (!Setup.checkDatabaseFile() && !usecli) {
 			try {
 				java.awt.Desktop.getDesktop().browse(new URI("http://localhost/setup"));
 			} catch (IOException e) {
@@ -48,7 +52,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 
 
 		}
-		if (Setup.checkBreadcrumb() && !usecli && !useweb) {
+		if (Setup.checkDatabaseFile() && !usecli && !useweb) {
 			Setup setup = new Setup();
 			setup.finalizeSetup(false, null,null);
 		}
@@ -86,34 +90,21 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 
 	@Override
 	public void initialize(Bootstrap<SkenavConfiguration> bootstrap) {
-		if (Setup.checkBreadcrumb()) {
-			Setup setup = new Setup();
-			try {
-				setup.readBreadcrumb();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
-					.put("/www", "/static")
-					.build()));
-		}
-		else {
-			bootstrap.addCommand(new MyCommand());
-			bootstrap.addBundle(new ConfiguredAssetsBundle(ImmutableMap.<String, String>builder()
-					.put("/www", "/static")
-					.build()));
-		}
+
+		bootstrap.addCommand(new MyCommand());
+		bootstrap.addBundle(new AssetsBundle("/www", "/static"));
+
 		bootstrap.addBundle(new ViewBundle<SkenavConfiguration>());
 		bootstrap.addBundle(new MultiPartBundle());
 	}
 
-
+	public static boolean serverrunning = false;
 	@Override
 	public void run(SkenavConfiguration configuration, Environment environment) throws URISyntaxException, IOException {
 		environment_setup(configuration,environment);
 		Crypto crypto = new Crypto();
 
-		final UploadResources uploadResources = new UploadResources(configuration.getHashFilename());
+		final UploadResources uploadResources = new UploadResources();
 		final FileMgrResources fileMgrResources = new FileMgrResources();
 		final QueryResources queryResources = new QueryResources();
 		final VideoResources videoResources = new VideoResources();
@@ -139,11 +130,12 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		//TODO: make certificate resources unavailable when not needed
 		environment.jersey().register(certificateResources);
 		environment.jersey().register(deleteFileResources);
-		if (!Setup.checkBreadcrumb()){
+		if (!Setup.checkDatabaseFile()){
 			environment.jersey().register(setupResources);
 		}
 		environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
-		//environment.servlets().addFilter("AuthFilter", new AuthFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+		serverrunning = true;
+
 
 
 	}

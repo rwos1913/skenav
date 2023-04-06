@@ -31,7 +31,8 @@ public class LoginResources {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response login(
             @FormDataParam("username") final String username,
-            @FormDataParam("password") final String password) throws IOException, URISyntaxException {
+            @FormDataParam("password") final String password,
+            @FormDataParam("rememberme") final String rememberme) throws IOException, URISyntaxException {
         System.out.println("username is: " + username);
         System.out.println("password is: " + password);
         String output = "this string is returned from the backend from the login form post request";

@@ -35,7 +35,7 @@ public class SettingsResources {
 		String authlevelstring = map.get("authorization");
 		int authlevel = Integer.parseInt(authlevelstring);
 		if (authlevel != 0 && authlevel != 1){
-			throw new WebApplicationException(400);
+			throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 		}
 		UUID uuid = UUID.randomUUID();
 		String invitecode = uuid.toString();

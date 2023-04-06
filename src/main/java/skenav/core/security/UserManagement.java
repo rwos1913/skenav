@@ -3,8 +3,10 @@ package skenav.core.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import skenav.core.Cache;
+import skenav.core.OS;
 
 import javax.ws.rs.core.Cookie;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

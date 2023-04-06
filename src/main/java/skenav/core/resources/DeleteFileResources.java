@@ -1,7 +1,6 @@
 package skenav.core.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import skenav.core.Cache;
 import skenav.core.OS;
 import skenav.core.db.Database;
 import skenav.core.security.UserManagement;
@@ -26,7 +25,7 @@ public class DeleteFileResources {
 		String user = UserManagement.parseCookieForUserName(cookie);
 		Database database = new Database();
 		if (database.checkFileOwner(filename, user)){
-			File file = new File(Cache.INSTANCE.getUploaddirectory() + OS.pathSeparator() + filename);
+			File file = new File(OS.getUserFilesDirectory(user) + filename);
 			if (file.delete()) {
 				database.deleteFile(filename);
 				System.out.println("file deleted");

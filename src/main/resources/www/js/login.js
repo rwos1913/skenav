@@ -26,15 +26,22 @@ function submitForm(event) {
 	console.log("form submit method triggered");
 	if (event.target.id === "loginform") {
 		var url = "/login/submitlogin"
+		var redirect = true
 	}
 	else if (event.target.id === "registerform") {
 		var url = "/register"
+		var redirect = false
 	}
 	var request = new XMLHttpRequest();
 	request.open('POST', url, true);
 	request.onload = function () {
 		// request successful
-		window.location.href = "/";
+		if (redirect === true) {
+			window.location.href = "/"
+		}
+		else {
+			switchToLogin();
+		}
 	};
 
 	request.onerror = function () {

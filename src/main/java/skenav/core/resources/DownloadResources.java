@@ -1,6 +1,9 @@
 package skenav.core.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import skenav.core.OS;
+import skenav.core.db.Database;
+import skenav.core.security.UserManagement;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
@@ -18,8 +21,14 @@ public class DownloadResources {
 	public Response downloadFile(
 			@HeaderParam("File-Name") String filename,
 			@CookieParam("SkenavAuth") Cookie cookie
-			){
-		String filepath = OS.getUserContentDirectory() + filename;
+			) throws JsonProcessingException {
+		String user = UserManagement.parseCookieForUserName(cookie);
+		String filepath = OS.getUserFilesDirectory(user) + filename;
+		Database database = new Database();
+		if(!database.checkFileOwner(filename, user)){
+			throw new WebApplicationException(Response.Status.FORBIDDEN);
+
+		}
 
 		StreamingOutput filestream = new StreamingOutput() {
 			@Override
