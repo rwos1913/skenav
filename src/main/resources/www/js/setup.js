@@ -10,8 +10,9 @@ function listenForSubmit() {
 function preventRedirect(event) {
 	var request = new XMLHttpRequest();
 	request.open("POST", "/setup/submitowner", true);
-	request.onload = function() {
+	request.onload = () => {
 		console.log("admin form sucessfully submitted");
+		window.location.href = "/";
 	}
 	request.onerror = function() {
 		alert("failed to submit user information");

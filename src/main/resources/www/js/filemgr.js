@@ -17,7 +17,7 @@ let search = "";
 let sort = "";
 function getSearchString() {
     //clearTable("tablebody");
-    searchvalue = document.getElementById("search");
+    let searchvalue = document.getElementById("search");
     search = searchvalue.value;
     console.log(search);
     let url = "/query?limit=100&search=" + search + "&sort=" + sort;
@@ -77,20 +77,91 @@ function displayFilesAsTable (filename, filetype, uploaddate, i) {
     else {
         tr.className = "oddtablerow";
     }
-    tr.onclick = function() {requestVideo(filename)};
+    tr.onclick = function() {determineMediaRequestType(filename, filetype)};
     var td0 = tr.insertCell(0);
     td0.textContent = filename;
+    var downloadbutton = document.createElement('button');
+    var deletebutton = document.createElement('button');
+    downloadbutton.type = "button";
+    deletebutton.type = "button";
+    downloadbutton.textContent= "download"
+    deletebutton.textContent = "delete";
+    downloadbutton.style.float = "right"
+    deletebutton.style.float = "right";
+    downloadbutton.style.display = "none"
+    deletebutton.style.display = "none";
+    deletebutton.onclick = function () {if (confirm("delete " + filename + "?")){deleteFile(filename)}};
+    downloadbutton.onclick = function () {sendDownloadRequest(filename)};
+    deletebutton.addEventListener('click', function (event){event.stopPropagation()});
+    downloadbutton.addEventListener('click', function (event) {event.stopPropagation()});
+    tr.onmouseenter = function () {
+        deletebutton.style.display = "inline"
+        downloadbutton.style.display = "inline"};
+    tr.onmouseleave = function () {
+        deletebutton.style.display = "none"
+        downloadbutton.style.display = "none"}
+    td0.appendChild(deletebutton);
+    td0.appendChild(downloadbutton);
     var td1 = tr.insertCell(1);
     td1.textContent = filetype;
-    td1.className = "tablecell"
+    td1.className = "tablecell";
     //TODO: replace file types with icons
     var td2 = tr.insertCell(2);
-    td2.className = "tablecell"
+    td2.className = "tablecell";
     td2.textContent = uploaddate;
     table.appendChild(tr);
 }
-function requestVideo(filename) {
+function determineMediaRequestType(filename, filetype) {
     console.log(filename);
+    if (filetype == "MKV Video" || filetype == "MP4 Video") {
+        sendVideoRequest(filename)
+    }
+    else {
+        alert("file only available for download");
+    }
+}
+function sendDownloadRequest(filename){
+    var xhr = new XMLHttpRequest();
+    var fileurl = '/download'
+    xhr.responseType = "blob";
+    xhr.onload = () => {
+        let data = xhr.response;
+        downloadFile(data, filename);
+    }
+    xhr.open("GET", fileurl, true);
+    xhr.setRequestHeader("File-Name", filename);
+    xhr.send(null);
+
+
+}
+function downloadFile(data, filename) {
+    var blob = new Blob([data], {type: 'application/octet-stream'});
+    let a = document.createElement("a");
+    a.style = "display: none";
+    document.body.appendChild(a);
+    let url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+function deleteFile(filename) {
+    fetch('/delete', {
+        method: 'POST',
+        body: filename,
+        headers: {
+            'Content-type': 'text/plain'
+        }
+    }).then( function (response) {
+        if (response.ok) {
+            clearTable();
+            let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+            getJson(url, callback);
+
+        }
+    })
+}
+function sendVideoRequest(filename) {
     var videoUrl = "/video?name=" + filename;
     var xhr = new XMLHttpRequest();
     xhr.responseType = "json";
@@ -101,9 +172,11 @@ function requestVideo(filename) {
     xhr.open( "GET", videoUrl, true);
     xhr.send(null);
 }
-function playVideo(playlistname) {
+function playVideo(jsondata) {
     var videodiv = document.createElement("div");
-    var video = document.createElement("video")
+    var video = document.createElement("video");
+    var username = jsondata.username;
+    var playlistname = jsondata.hlsfilename;
     videodiv.id = "videoplayer";
     video.id = "video";
     video.controls = true;
@@ -117,7 +190,7 @@ function playVideo(playlistname) {
         hls.attachMedia(video);
         hls.on(Hls.Events.MEDIA_ATTACHED, function () {
             console.log('video and hls.js are now bound together');
-            hls.loadSource('/files/hlstestfolder/' + playlistname);
+            hls.loadSource('/video/hlsfiles/' + playlistname);
             hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                 hls.startLoad(0)
                 console.log(
@@ -141,6 +214,11 @@ function uploadprompt() {
 
     formData.append("file", fileupload);
     req.open("POST","/upload");
+    req.onload = () => {
+        clearTable();
+        let url = "/query?limit=100&search=" + search + "&sort=" + sort;
+        getJson(url,callback);
+    }
     req.send(formData);
 }
 

@@ -1,32 +1,33 @@
 package skenav.core.resources;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import skenav.core.Cache;
 import skenav.core.OS;
 import skenav.core.db.Database;
+import skenav.core.security.Crypto;
+import skenav.core.security.UserManagement;
 
 @Path("upload")
 @Produces(MediaType.TEXT_HTML)
 public class UploadResources {
-    private String uploadDirectory;
-    private String hashFilename;
-    Database database;
-    public UploadResources(String uploadDirectory, Database database, String hashFilename) {
-        this.hashFilename = hashFilename;
-        this.uploadDirectory = uploadDirectory;
-        this.database = database;
 
-    }
 
 
     @POST
@@ -38,25 +39,25 @@ public class UploadResources {
             //gets inputstream from html form
             @FormDataParam("file") final InputStream fileInputStream,
             //gets content disposition from html form
-            @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) throws IOException {
+            @FormDataParam("file") final FormDataContentDisposition contentDispositionHeader,
+            @CookieParam("SkenavAuth") final Cookie cookie) throws IOException {
         String filename = contentDispositionHeader.getFileName();
         String filetype = parseFileType(filename);
         String filehash = hashString(filename);
+        String user = UserManagement.parseCookieForUserName(cookie);
         System.out.println("file name from content dispo header is:" + filename);
         String filestring;
         //boolean b1 = Boolean.parseBoolean(hashFilename);
-        if (hashFilename.equals("true")) {
-            filestring = filehash;
-        }
-        else {
-            filestring = filename;
-        }
+
         //TODO: allow appending of file extension to hashed file names or just do that by defualt idk
         String datetime = getDateTime();
-        String uploadedFileLocation = uploadDirectory + "usercontent" + OS.pathSeparator() + filestring;
         // calls write to file
-        writeToFile(fileInputStream, uploadedFileLocation);
-        database.addFile(filehash, filename, filetype, datetime);
+        Database database = new Database();
+        /*if(database.checkForFile(filename)) {
+            filename = handleDuplicateFileName(filename, database);
+        }*/
+        writeToFile(fileInputStream, OS.getUserFilesDirectory(user) + filename);
+        database.addFile(filehash, filename, filetype, datetime, user);
         String output = "Upload successful!";
         System.out.println(output);
         return Response.ok(output).build();
@@ -93,6 +94,7 @@ public class UploadResources {
 
         return filetype;
     }
+    // makes file type "pretty"
     private String makeTypePretty(String rawfiletype) {
         String rft = rawfiletype.toLowerCase();
         String prettyfiletype;
@@ -115,6 +117,12 @@ public class UploadResources {
         else if (rft.equals("rtf")) {
             prettyfiletype = "RTF Document";
         }
+        else if (rft.equals("mp4")) {
+            prettyfiletype = "MP4 Video";
+        }
+        else if (rft.equals("mkv")) {
+            prettyfiletype = "MKV Video";
+        }
         else {
             prettyfiletype = "unknown extension: " + rawfiletype;
         }
@@ -132,5 +140,26 @@ public class UploadResources {
         String output = Hex.toHexString(digest);
         return output;
     }
+    /*public String handleDuplicateFileName (String filename, Database database) {
+        ArrayList<String> duplicatenames = database.checkDuplicates;
+        int existingduplicatenumber = 0;
+        for (int i = 0; i < duplicatenames.size(); i++) {
+            String subjectFileName = duplicatenames.get(i + 1);
+            if (subjectFileName.matches("[A-Za-z0-9]+\\(.*\\)")) {
+                char potentialduplicatenumberchar = filename.charAt(filename.lastIndexOf("(") + 1);
+                int potentialduplicatenumber = Character.getNumericValue(potentialduplicatenumberchar);
+                if (existingduplicatenumber < potentialduplicatenumber) {
+                    existingduplicatenumber = potentialduplicatenumber;
+                }
+            }
+        }
+        String[] filenameparts = filename.split("\\(.*\\)");
+        String rawfilename = filenameparts[0];
+        existingduplicatenumber = existingduplicatenumber + 1;
+        filename = rawfilename + "(" + existingduplicatenumber + ")";
+        return filename;
+    }*/
+
+
 
 }

@@ -5,6 +5,11 @@
 	<script type="application/javascript" src="/static/js/settings.js"></script>
 </head>
 <body>
-
+<div id="inviteuserdiv">
+<form id="inviteuserform" action="/settings/generateinvite" method="post" enctype="multipart/form-data">
+	<input type="text" id="nickname" name="nickname" placeholder="nickname">
+	<input type="submit" id="submit" name="submit">
+</form>
+</div>
 </body>
 </html>
