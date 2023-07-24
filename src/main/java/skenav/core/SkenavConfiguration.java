@@ -1,5 +1,6 @@
 package skenav.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
@@ -12,6 +13,7 @@ import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.server.ServerFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import skenav.core.db.Database;
 
 import javax.validation.Valid;
@@ -22,9 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SkenavConfiguration extends Configuration {
+    /*
+    //@JsonIgnoreProperties(ignoreUnknown = true)
     public SkenavConfiguration() {
         super();
-        if (!Cache.INSTANCE.getTlsAlreadySet()) {
             HttpConnectorFactory httpconnectorfactory = new HttpConnectorFactory();
             httpconnectorfactory.setPort(80);
             List<ConnectorFactory> applicationConnectors = new ArrayList<ConnectorFactory>();
@@ -34,22 +37,23 @@ public class SkenavConfiguration extends Configuration {
                 HttpsConnectorFactory httpsconnectorfactory = new HttpsConnectorFactory();
                 httpsconnectorfactory.setPort(443);
                 System.out.println("tls port set");
-                httpsconnectorfactory.setKeyStoreType("JKS");
-                System.out.println("keystore type set");
-                httpsconnectorfactory.setKeyStorePath(OS.getSkenavDirectory() + "SkenavKeyStore.jks");
+                httpsconnectorfactory.setKeyStorePath(OS.getSkenavDirectory() + "SkenavKeyStore.jks"+ OS.pathSeparator());
+                httpsconnectorfactory.setValidateCerts(false);
+                httpsconnectorfactory.setValidatePeers(false);
                 System.out.println("keystore path is: " + httpsconnectorfactory.getKeyStorePath());
                 System.out.println("keystore path set");
-
                 //TODO: generate keystore password
                 httpsconnectorfactory.setKeyStorePassword("changeit");
                 //httpsconnectorfactory.setBindHost(new Database().getAppData("CA domain"));
                 applicationConnectors.add(httpsconnectorfactory);
             }
+
             DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
             serverFactory.setApplicationConnectors(applicationConnectors);
-        }
-
+            ((HttpConnectorFactory) ((DefaultServerFactory) getServerFactory()).setApplicationConnectors(applicationConnectors));
     }
 
 
+
+*/
 }

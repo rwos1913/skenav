@@ -14,6 +14,7 @@ import java.io.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,11 +51,12 @@ public class UploadResources {
 
         //TODO: allow appending of file extension to hashed file names or just do that by defualt idk
         String datetime = getDateTime();
-        String uploadDirectory = OS.getUserFilesDirectory(user);
-        String uploadedFileLocation = uploadDirectory + filename;
         // calls write to file
-        writeToFile(fileInputStream, uploadedFileLocation);
         Database database = new Database();
+        /*if(database.checkForFile(filename)) {
+            filename = handleDuplicateFileName(filename, database);
+        }*/
+        writeToFile(fileInputStream, OS.getUserFilesDirectory(user) + filename);
         database.addFile(filehash, filename, filetype, datetime, user);
         String output = "Upload successful!";
         System.out.println(output);
@@ -92,6 +94,7 @@ public class UploadResources {
 
         return filetype;
     }
+    // makes file type "pretty"
     private String makeTypePretty(String rawfiletype) {
         String rft = rawfiletype.toLowerCase();
         String prettyfiletype;
@@ -137,6 +140,25 @@ public class UploadResources {
         String output = Hex.toHexString(digest);
         return output;
     }
+    /*public String handleDuplicateFileName (String filename, Database database) {
+        ArrayList<String> duplicatenames = database.checkDuplicates;
+        int existingduplicatenumber = 0;
+        for (int i = 0; i < duplicatenames.size(); i++) {
+            String subjectFileName = duplicatenames.get(i + 1);
+            if (subjectFileName.matches("[A-Za-z0-9]+\\(.*\\)")) {
+                char potentialduplicatenumberchar = filename.charAt(filename.lastIndexOf("(") + 1);
+                int potentialduplicatenumber = Character.getNumericValue(potentialduplicatenumberchar);
+                if (existingduplicatenumber < potentialduplicatenumber) {
+                    existingduplicatenumber = potentialduplicatenumber;
+                }
+            }
+        }
+        String[] filenameparts = filename.split("\\(.*\\)");
+        String rawfilename = filenameparts[0];
+        existingduplicatenumber = existingduplicatenumber + 1;
+        filename = rawfilename + "(" + existingduplicatenumber + ")";
+        return filename;
+    }*/
 
 
 

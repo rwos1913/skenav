@@ -262,4 +262,21 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public boolean checkForFile(String filename) {
+        boolean fileexists = false;
+        ResultSet rs;
+        try {
+            PreparedStatement statement = con.prepareStatement("SELECT FILE_NAME FROM TABLE1 WHERE FILE_NAME = ?");
+            statement.setString(1, filename);
+            rs = statement.executeQuery();
+            if (rs.next()){
+                fileexists = true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return fileexists;
+    }
 }
