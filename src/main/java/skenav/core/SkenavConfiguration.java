@@ -1,59 +1,23 @@
 package skenav.core;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
-import io.dropwizard.bundles.assets.AssetsConfiguration;
-import io.dropwizard.jetty.ConnectorFactory;
-import io.dropwizard.jetty.HttpConnectorFactory;
-import io.dropwizard.jetty.HttpsConnectorFactory;
-import io.dropwizard.server.AbstractServerFactory;
-import io.dropwizard.server.DefaultServerFactory;
-import io.dropwizard.server.ServerFactory;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import skenav.core.db.Database;
+import io.dropwizard.Configuration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class SkenavConfiguration extends Configuration {
-    /*
-    //@JsonIgnoreProperties(ignoreUnknown = true)
-    public SkenavConfiguration() {
-        super();
-            HttpConnectorFactory httpconnectorfactory = new HttpConnectorFactory();
-            httpconnectorfactory.setPort(80);
-            List<ConnectorFactory> applicationConnectors = new ArrayList<ConnectorFactory>();
-            applicationConnectors.add(httpconnectorfactory);
-            if (new File(OS.getSkenavDirectory() + "database.mv.db").exists() && new Database().getAppData("usetls").equals("true") && new File(OS.getSkenavDirectory() + "SkenavKeyStore.jks").exists()) {
-                System.out.println("tls connectors triggered");
-                HttpsConnectorFactory httpsconnectorfactory = new HttpsConnectorFactory();
-                httpsconnectorfactory.setPort(443);
-                System.out.println("tls port set");
-                httpsconnectorfactory.setKeyStorePath(OS.getSkenavDirectory() + "SkenavKeyStore.jks"+ OS.pathSeparator());
-                httpsconnectorfactory.setValidateCerts(false);
-                httpsconnectorfactory.setValidatePeers(false);
-                System.out.println("keystore path is: " + httpsconnectorfactory.getKeyStorePath());
-                System.out.println("keystore path set");
-                //TODO: generate keystore password
-                httpsconnectorfactory.setKeyStorePassword("changeit");
-                //httpsconnectorfactory.setBindHost(new Database().getAppData("CA domain"));
-                applicationConnectors.add(httpsconnectorfactory);
-            }
+	@NotEmpty
+	private String usetls;
 
-            DefaultServerFactory serverFactory = (DefaultServerFactory) getServerFactory();
-            serverFactory.setApplicationConnectors(applicationConnectors);
-            ((HttpConnectorFactory) ((DefaultServerFactory) getServerFactory()).setApplicationConnectors(applicationConnectors));
-    }
+	@JsonProperty
+	public String getUseTls() {
+		return this.usetls;
 
-
-
-*/
+	}
+	@JsonProperty
+	public void setUseTls(String usetls){
+		this.usetls = usetls;
+	}
 }

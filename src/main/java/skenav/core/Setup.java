@@ -1,6 +1,7 @@
 package skenav.core;
 
 import io.dropwizard.Application;
+import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 import org.shredzone.acme4j.exception.AcmeException;
 import skenav.core.db.Database;
@@ -110,7 +111,8 @@ public class Setup {
 	// TODO: reformat so usercontent is in a subfolder of skenav folder
 	public void finalizeSetup(boolean firsttime, String username, String password) {
 		// this sets TLS
-		boolean usetls = true;
+		SkenavConfiguration config = new SkenavConfiguration();
+		boolean usetls = Boolean.parseBoolean(config.getUseTls());
 		String usercontentdirectory = OS.getUserContentDirectory();
 		File skenavdirectory = new File(OS.getSkenavDirectory());
 		File usercontentdirectoryfile = new File(usercontentdirectory);

@@ -42,7 +42,7 @@ public class SkenavApplication extends Application<SkenavConfiguration> {
 		}
 		if (!Setup.checkDatabaseFile() && !usecli) {
 			try {
-				java.awt.Desktop.getDesktop().browse(new URI("http://localhost/setup"));
+				java.awt.Desktop.getDesktop().browse(new URI("http://localhost:/setup"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (URISyntaxException e) {

@@ -1,0 +1,11 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+    #- type: https
+    #  port: 8443
+    #  keyStorePath: /root/.skenav/SkenavkeyStore.pfx
+    #  keyStorePassword: changeit
+  adminConnectors: []
+
+useTls: false #must not be null. Only specify false if skenav will be used locally.
